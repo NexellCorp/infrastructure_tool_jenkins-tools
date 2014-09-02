@@ -1,0 +1,68 @@
+# Add SSH(SFTP) artifact publishing to snapshots.linaro.org
+
+#from lxml.etree import Element
+from lxml.etree import fromstring
+
+publisher = """\
+    <jenkins.plugins.publish__over__ssh.BapSshPublisherPlugin>
+      <consolePrefix>SSH: </consolePrefix>
+      <delegate>
+        <publishers>
+          <jenkins.plugins.publish__over__ssh.BapSshPublisher>
+            <configName>snapshots.linaro.org</configName>
+            <verbose>false</verbose>
+            <transfers>
+              <jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                <remoteDirectory>${JOB_NAME}/${BUILD_NUMBER}</remoteDirectory>
+                <sourceFiles>build/out/target/*/*/*.img,build/out/target/*/*/*.tar.bz2,build/out/target/*/*/MD5SUMS,build/out/*.tar.bz2,build/out/*.xml,build/out/*_config,build/out/lava-job-info</sourceFiles>
+                <excludes></excludes>
+                <removePrefix>build/out</removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <execCommand></execCommand>
+                <execTimeout>120000</execTimeout>
+                <usePty>false</usePty>
+              </jenkins.plugins.publish__over__ssh.BapSshTransfer>
+            </transfers>
+            <useWorkspaceInPromotion>false</useWorkspaceInPromotion>
+            <usePromotionTimestamp>false</usePromotionTimestamp>
+          </jenkins.plugins.publish__over__ssh.BapSshPublisher>
+          <jenkins.plugins.publish__over__ssh.BapSshPublisher>
+            <configName>snapshots.linaro.org file-move</configName>
+            <verbose>false</verbose>
+            <transfers>
+              <jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                <remoteDirectory></remoteDirectory>
+                <sourceFiles></sourceFiles>
+                <excludes></excludes>
+                <removePrefix></removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <execCommand>reshuffle-files</execCommand>
+                <execTimeout>120000</execTimeout>
+                <usePty>false</usePty>
+              </jenkins.plugins.publish__over__ssh.BapSshTransfer>
+            </transfers>
+            <useWorkspaceInPromotion>false</useWorkspaceInPromotion>
+            <usePromotionTimestamp>false</usePromotionTimestamp>
+          </jenkins.plugins.publish__over__ssh.BapSshPublisher>
+        </publishers>
+        <continueOnError>false</continueOnError>
+        <failOnError>false</failOnError>
+        <alwaysPublishFromMaster>true</alwaysPublishFromMaster>
+        <hostConfigurationAccess class="jenkins.plugins.publish_over_ssh.BapSshPublisherPlugin" reference="../.."/>
+      </delegate>
+    </jenkins.plugins.publish__over__ssh.BapSshPublisherPlugin>
+"""
+
+def mangle(tree):
+    if tree.xpath("//jenkins.plugins.publish__over__ssh.BapSshPublisherPlugin"):
+        # Already there
+        return
+    tag = tree.xpath('/project/publishers')[0]
+    node = fromstring(publisher)
+    tag.append(node)
+    node.getprevious().tail += "  "
+    node.tail = "\n  "

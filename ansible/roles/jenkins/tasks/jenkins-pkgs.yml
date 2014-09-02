@@ -1,0 +1,44 @@
+- name: Install Jenkins dependency packages
+  apt: pkg={{item}}
+  sudo: yes
+  with_items:
+      - default-jre
+      - daemon
+  tags:
+      - pkg
+      - jenkins-install
+
+- name: Download Jenkins {{jenkins_version}} LTS package
+  get_url: url=http://pkg.jenkins-ci.org/debian-stable/binary/jenkins_{{jenkins_version}}_all.deb
+           dest=/tmp/jenkins_{{jenkins_version}}_all.deb
+  tags:
+      - pkg
+      - jenkins-install
+
+- name: Install Jenkins
+  shell: RUNLEVEL=1 dpkg -i --skip-same-version /tmp/jenkins_{{jenkins_version}}_all.deb
+  sudo: yes
+  register: dpkg_result
+  changed_when: "'already installed' not in dpkg_result.stderr"
+  notify:
+      - Restart Jenkins
+  tags:
+      - pkg
+      - jenkins-install
+
+# System-level Jenkins configuration
+- name: Configure Jenkins port
+  lineinfile: regexp="^HTTP_PORT=" line="HTTP_PORT={{jenkins_port}}" dest=/etc/default/jenkins backup=yes
+  sudo: yes
+  when: jenkins_port != 8080
+
+- name: Configure Jenkins URL prefix
+  # Note: Apache and Jenkins prefixes must match! (mod_proxy is not smart enough
+  # to rewrite links in HTML, and mod_proxy_html is a chore to run.)
+
+  # Add --prefix= arg to existing args if not there yet
+  lineinfile: regexp='^JENKINS_ARGS=(?!.*--prefix=/jenkins)"?(.+?)"?$'
+              line='JENKINS_ARGS="\1 --prefix={{jenkins_prefix}}"'
+              dest=/etc/default/jenkins backrefs=yes
+  sudo: yes
+  when: jenkins_prefix != "/"

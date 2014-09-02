@@ -1,0 +1,7 @@
+site_name: android-build.linaro.org
+hosttype: android-build
+
+jenkins_private: no
+#jenkins_reply_to: rdk-project@lists.linaro.org
+
+jenkins_prefix: /jenkins

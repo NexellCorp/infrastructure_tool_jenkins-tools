@@ -1,0 +1,5 @@
+site_name: rdk.ci.linaro.org
+hosttype: rdk-ci
+
+jenkins_private: yes
+jenkins_reply_to: rdk-project@lists.linaro.org

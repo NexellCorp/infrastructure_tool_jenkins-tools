@@ -1,0 +1,320 @@
+    <slave>
+      <name>x86_64-01</name>
+      <description>LAVA Lab x86 TCWG Build Server</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41001</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>x86_64 tcwg</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>x86_64-02</name>
+      <description>LAVA Lab x86 TCWG Build Server</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41002</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>x86_64 tcwg</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>x86_64-03</name>
+      <description>LAVA Lab x86 TCWG Build Server</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41003</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>x86_64 tcwg</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>x86_64-04</name>
+      <description>LAVA Lab x86 TCWG Build Server</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41004</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>x86_64 tcwg</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>x86_64-05</name>
+      <description>LAVA Lab x86 TCWG Build Server</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41005</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>x86_64 tcwg</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>x86_64-06</name>
+      <description>LAVA Lab x86 TCWG Build Server</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41006</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>x86_64 tcwg</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a15-01</name>
+      <description>LAVA Lab ARM A15 Chromebook</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>40001</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a15 precise</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a15-02</name>
+      <description>LAVA Lab ARM A15 Chromebook</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>40002</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a15 precise</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a15-03</name>
+      <description>LAVA Lab ARM A15 Chromebook</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>40003</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a15 precise</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a15-04</name>
+      <description>LAVA Lab ARM A15 Chromebook</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>40004</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a15 precise</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a15-05</name>
+      <description>LAVA Lab ARM A15 Chromebook</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>40005</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a15 precise</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a15-06</name>
+      <description>LAVA Lab ARM A15 Chromebook</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>40006</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a15 precise</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a15-07</name>
+      <description>LAVA Lab ARM A15 Chromebook</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>40007</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a15 precise</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a15-08</name>
+      <description>LAVA Lab ARM A15 Chromebook</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>40008</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a15 precise</label>
+      <nodeProperties/>
+      <userId>tyler.baker@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a8-01</name>
+      <description>LAVA Lab ARM A8 Beaglebone Black</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41007</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a8 precise</label>
+      <nodeProperties/>
+      <userId>alan.bennett@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a8-02</name>
+      <description>LAVA Lab ARM A8 Beaglebone Black</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41008</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a8 precise</label>
+      <nodeProperties/>
+      <userId>rob.savoye@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a8-03</name>
+      <description>LAVA Lab ARM A8 Beaglebone Black</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41009</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a8 precise</label>
+      <nodeProperties/>
+      <userId>rob.savoye@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a8-04</name>
+      <description>LAVA Lab ARM A8 Beaglebone Black</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41010</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a8 precise</label>
+      <nodeProperties/>
+      <userId>rob.savoye@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a8-05</name>
+      <description>LAVA Lab ARM A8 Beaglebone Black</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41011</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a8 precise</label>
+      <nodeProperties/>
+      <userId>rob.savoye@linaro.org</userId>
+    </slave>
+    <slave>
+      <name>cortex-a8-06</name>
+      <description>LAVA Lab ARM A8 Beaglebone Black</description>
+      <remoteFS>/home/buildslave</remoteFS>
+      <numExecutors>1</numExecutors>
+      <mode>NORMAL</mode>
+      <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+        <host>lab.validation.linaro.org</host>
+        <port>41012</port>
+        <credentialsId>6d1cef13-3c99-4564-93bc-60aa2bea21ab</credentialsId>
+      </launcher>
+      <label>arm a8 precise</label>
+      <nodeProperties/>
+      <userId>rob.savoye@linaro.org</userId>
+    </slave>

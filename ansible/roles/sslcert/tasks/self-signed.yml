@@ -1,0 +1,14 @@
+- name: Prepare OpenSSL config
+  template: src=ssleay.conf dest=/tmp/
+- name: Create self-signed SSL certificate
+  command: openssl req -config /tmp/ssleay.conf -new -x509 -days 3650 -nodes -out {{ssl_cert}} -keyout {{ssl_key}}
+           creates={{ssl_cert}}
+  sudo: yes
+  notify:
+      - Restart Apache
+- name: Set permissions on certificate
+  file: path={{ssl_cert}} mode=600
+  sudo: yes
+- name: Set permissions on certificate key
+  file: path={{ssl_key}} mode=600
+  sudo: yes

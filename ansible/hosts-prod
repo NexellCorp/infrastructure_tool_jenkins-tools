@@ -1,0 +1,26 @@
+[android-build]
+android-build.linaro.org
+
+[ci]
+ci.linaro.org
+
+[rdk-ci]
+rdk.ci.linaro.org
+
+[tcwg-ci]
+tcwg.ci.linaro.org
+
+# All individual services are based on jenkins-generic
+[jenkins-generic:children]
+android-build
+ci
+rdk-ci
+tcwg-ci
+
+# Superset of all services
+[production:children]
+jenkins-generic
+
+# All production sites are ec2
+[ec2:children]
+production

@@ -1,0 +1,25 @@
+# Add copy-to-slave plugin setup for build dependencies
+
+#from lxml.etree import Element
+from lxml.etree import fromstring
+
+new_node = """\
+    <com.michelin.cio.hudson.plugins.copytoslave.CopyToSlaveBuildWrapper>
+      <includes>**/*</includes>
+      <excludes></excludes>
+      <flatten>false</flatten>
+      <includeAntExcludes>false</includeAntExcludes>
+      <hudsonHomeRelative>false</hudsonHomeRelative>
+      <relativeTo>copyToSlave</relativeTo>
+    </com.michelin.cio.hudson.plugins.copytoslave.CopyToSlaveBuildWrapper>
+"""
+
+def mangle(tree):
+    if tree.xpath("//com.michelin.cio.hudson.plugins.copytoslave.CopyToSlaveBuildWrapper"):
+        # Already there
+        return
+    tag = tree.xpath('/project/buildWrappers')[0]
+    node = fromstring(new_node)
+    tag.append(node)
+    node.getprevious().tail += "  "
+    node.tail = "\n  "

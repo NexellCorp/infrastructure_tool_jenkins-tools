@@ -1,0 +1,5 @@
+# Production instances now use real usernames, so use --user=
+# ansible_ssh_user: ubuntu
+
+# Workaround for Ansible not liking empty var files
+_empty: _empty

@@ -1,0 +1,6 @@
+    <permission>hudson.model.Hudson.Read:frontend</permission>
+    <permission>hudson.model.Item.Build:frontend</permission>
+    <permission>hudson.model.Item.Configure:frontend</permission>
+    <permission>hudson.model.Item.Create:frontend</permission>
+    <permission>hudson.model.Item.Delete:frontend</permission>
+    <permission>hudson.model.Item.Read:frontend</permission>

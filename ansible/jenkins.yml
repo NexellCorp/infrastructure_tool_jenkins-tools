@@ -1,0 +1,41 @@
+---
+- hosts: jenkins-generic
+  gather_facts: no
+  vars:
+    - linaro_android_build_tools_repo: http://git.linaro.org/git/infrastructure/linaro-android-build-tools.git
+    - linaro_android_build_tools_rev: HEAD
+    - jenkins_version: 1.565.1
+    - ssl_cert: /etc/ssl/certs/{{site_name}}.crt
+    - ssl_key: /etc/ssl/private/{{site_name}}.key
+    - jenkins_extra_users: files/jenkins_users.xml
+  vars_files:
+    # Include private settings only if they exist - not all modes need
+    # them (e.g. jenkins_auth: native).
+    # Following construct works as: find first file which exists and use it.
+    - ["{{private_vars}}", "vars/empty.yml"]
+    - ["{{secrets_dir}}/host_vars/{{inventory_hostname}}", "vars/empty.yml"]
+  roles:
+    - env_validate
+    - common
+    - apache
+    - {role: sslcert, tags: ["sslcert"]}
+    - jenkins
+    - {role: jenkins-config-skeleton, when: not jenkins_config_from_backup}
+    - {role: jenkins-config-git, when: jenkins_config_from_backup}
+    - {role: jenkins-ssh-publish, when: jenkins_setup_ssh_publish, tags: ['publish']}
+    - {role: jenkins-linaro-theme}
+    - {role: apache-site, config: "jenkins", when: hosttype != "android-build", tags: ["apache"]}
+    - {role: apache-site, config: "android-build.linaro.org", when: hosttype == "android-build", tags: ["apache"]}
+    - {role: linaro-jenkins-tools, tags: ['linaro-jenkins-tools']}
+    - {role: jenkins-utils-cron-disable}
+    - {role: jenkins-utils-publish-staging}
+    - {role: jenkins-utils-set-jenkins-url}
+    - {role: new-publish, when: hosttype == "android-build", tags: ["new-publish"]}
+    - {role: squid, tags: ["squid"]}
+    - {role: jenkins-cronjobs, tags: ["cronjob"]}
+  tasks:
+  - name: Check out linaro-android-build-tools
+    git: name={{linaro_android_build_tools_repo}} version={{linaro_android_build_tools_rev}}
+         dest=~/linaro-android-build-tools
+    tags:
+        - git

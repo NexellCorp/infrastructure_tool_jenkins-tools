@@ -1,0 +1,66 @@
+jenkins_port: 8080
+# These are upgrades of plugins that ship inside .war. Very unwise to do so of Jenkins.
+# Even more unwise is violent overwriting of upgrades, unless there's .pinned file.
+# https://wiki.jenkins-ci.org/display/JENKINS/Pinned+Plugins
+jenkins_override_plugins:
+    - {url: "http://updates.jenkins-ci.org/download/plugins/antisamy-markup-formatter/1.2/antisamy-markup-formatter.hpi", file: "antisamy-markup-formatter.jpi"}
+    - {url: "http://updates.jenkins-ci.org/download/plugins/credentials/1.16.1/credentials.hpi", file: "credentials.jpi"}
+    - {url: "http://updates.jenkins-ci.org/download/plugins/cvs/2.12/cvs.hpi", file: "cvs.jpi"}
+    - {url: "http://updates.jenkins-ci.org/download/plugins/ldap/1.10.2/ldap.hpi", file: "ldap.jpi"}
+    - {url: "http://updates.jenkins-ci.org/download/plugins/mailer/1.11/mailer.hpi", file: "mailer.jpi"}
+    - {url: "http://updates.jenkins-ci.org/download/plugins/matrix-auth/1.2/matrix-auth.hpi", file: "matrix-auth.jpi"}
+    - {url: "http://updates.jenkins-ci.org/download/plugins/maven-plugin/2.6/maven-plugin.hpi", file: "maven-plugin.jpi"}
+    - {url: "http://updates.jenkins-ci.org/download/plugins/ssh-credentials/1.9/ssh-credentials.hpi", file: "ssh-credentials.jpi" }
+    - {url: "http://updates.jenkins-ci.org/download/plugins/ssh-slaves/1.6/ssh-slaves.hpi", file: "ssh-slaves.jpi" }
+    - {url: "http://updates.jenkins-ci.org/download/plugins/subversion/2.4.2/subversion.hpi", file: "subversion.jpi"}
+    - {url: "http://updates.jenkins-ci.org/download/plugins/translation/1.11/translation.hpi", file: "translation.jpi"}
+jenkins_plugins:
+    - http://people.linaro.org/~paul.sokolovsky/jenkins/shell-status-20120125.hpi
+    - http://updates.jenkins-ci.org/download/plugins/ant/1.2/ant.hpi
+    - http://updates.jenkins-ci.org/download/plugins/build-name-setter/1.3/build-name-setter.hpi
+    - http://updates.jenkins-ci.org/download/plugins/build-timeout/1.14/build-timeout.hpi
+    - http://updates.jenkins-ci.org/download/plugins/conditional-buildstep/1.3.3/conditional-buildstep.hpi
+    - http://updates.jenkins-ci.org/download/plugins/copy-to-slave/1.4.3/copy-to-slave.hpi
+    - http://updates.jenkins-ci.org/download/plugins/copyartifact/1.31/copyartifact.hpi
+    - http://updates.jenkins-ci.org/download/plugins/crowd2/1.6/crowd2.hpi
+    - http://updates.jenkins-ci.org/download/plugins/dynamic-axis/1.0.2/dynamic-axis.hpi
+    - http://updates.jenkins-ci.org/download/plugins/ec2/1.18/ec2.hpi
+    - http://updates.jenkins-ci.org/download/plugins/email-ext/2.38.1/email-ext.hpi
+    - http://updates.jenkins-ci.org/download/plugins/envinject/1.89/envinject.hpi
+    - http://updates.jenkins-ci.org/download/plugins/external-monitor-job/1.2/external-monitor-job.hpi
+    - http://updates.jenkins-ci.org/download/plugins/gerrit-trigger/2.11.1/gerrit-trigger.hpi
+    - http://updates.jenkins-ci.org/download/plugins/git/2.2.5/git.hpi
+    - http://updates.jenkins-ci.org/download/plugins/git-client/1.10.1/git-client.hpi
+    - http://updates.jenkins-ci.org/download/plugins/greenballs/1.14/greenballs.hpi
+    - http://updates.jenkins-ci.org/download/plugins/groovy-postbuild/1.10/groovy-postbuild.hpi
+    - http://updates.jenkins-ci.org/download/plugins/htmlpublisher/1.3/htmlpublisher.hpi
+    - http://updates.jenkins-ci.org/download/plugins/instant-messaging/1.29/instant-messaging.hpi
+    - http://updates.jenkins-ci.org/download/plugins/ircbot/2.25/ircbot.hpi
+    - http://updates.jenkins-ci.org/download/plugins/jobConfigHistory/2.8/jobConfigHistory.hpi
+    - http://updates.jenkins-ci.org/download/plugins/jenkins-multijob-plugin/1.13/jenkins-multijob-plugin.hpi
+    - http://updates.jenkins-ci.org/download/plugins/jquery/1.7.2-1/jquery.hpi
+    - http://updates.jenkins-ci.org/download/plugins/log-parser/1.0.8/log-parser.hpi
+    - http://updates.jenkins-ci.org/download/plugins/mapdb-api/1.0.1.0/mapdb-api.hpi
+    - http://updates.jenkins-ci.org/download/plugins/matrix-project/1.3/matrix-project.hpi
+    - http://updates.jenkins-ci.org/download/plugins/matrixtieparent/1.2/matrixtieparent.hpi
+    - http://updates.jenkins-ci.org/download/plugins/nodelabelparameter/1.5.1/nodelabelparameter.hpi
+    - http://updates.jenkins-ci.org/download/plugins/parameterized-trigger/2.25/parameterized-trigger.hpi
+    - http://updates.jenkins-ci.org/download/plugins/publish-over-ssh/1.11/publish-over-ssh.hpi
+    - http://updates.jenkins-ci.org/download/plugins/repo/1.6/repo.hpi
+    - http://updates.jenkins-ci.org/download/plugins/run-condition/1.0/run-condition.hpi
+    - http://updates.jenkins-ci.org/download/plugins/scm-api/0.2/scm-api.hpi
+    - http://updates.jenkins-ci.org/download/plugins/simple-theme-plugin/0.3/simple-theme-plugin.hpi
+    - http://updates.jenkins-ci.org/download/plugins/ssh-agent/1.4.1/ssh-agent.hpi
+    - http://updates.jenkins-ci.org/download/plugins/throttle-concurrents/1.8.3/throttle-concurrents.hpi
+    - http://updates.jenkins-ci.org/download/plugins/timestamper/1.5.14/timestamper.hpi
+    - http://updates.jenkins-ci.org/download/plugins/token-macro/1.10/token-macro.hpi
+    - http://updates.jenkins-ci.org/download/plugins/urltrigger/0.37/urltrigger.hpi
+
+    # Temporary until need for ci.linaro.org is figured out
+#    - http://updates.jenkins-ci.org/download/plugins/openid/1.8/openid.hpi
+    - http://updates.jenkins-ci.org/download/plugins/warnings/4.41/warnings.hpi
+    - http://updates.jenkins-ci.org/download/plugins/bazaar/1.22/bazaar.hpi
+    - http://updates.jenkins-ci.org/download/plugins/analysis-core/1.58/analysis-core.hpi
+    - http://updates.jenkins-ci.org/download/plugins/dropdown-viewstabbar-plugin/1.6/dropdown-viewstabbar-plugin.hpi
+    - http://updates.jenkins-ci.org/download/plugins/claim/2.3/claim.hpi
+    - http://updates.jenkins-ci.org/download/plugins/build-pipeline-plugin/1.4.3/build-pipeline-plugin.hpi

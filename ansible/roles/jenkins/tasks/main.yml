@@ -1,0 +1,2 @@
+- include: jenkins-pkgs.yml
+- include: jenkins-plugins.yml

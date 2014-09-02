@@ -1,0 +1,15 @@
+# Update list of archived artifacts
+# Note - since we stopped to use native Jenkins archiving,
+# this script is no longer used
+
+new_value = "build/out/target/*/*/*.img," \
+    "build/out/target/*/*/*.tar.bz2," \
+    "build/out/target/*/*/MD5SUMS," \
+    "build/out/*.tar.bz2," \
+    "build/out/*.xml," \
+    "build/out/*_config," \
+    "build/out/lava-job-info"
+
+def mangle(tree):
+    tags = tree.xpath('/project/publishers/hudson.tasks.ArtifactArchiver/artifacts')
+    tags[0].text = new_value

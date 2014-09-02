@@ -1,0 +1,12 @@
+# Update Jenkins URL to use current server
+# This should be run against
+# jenkins.model.JenkinsLocationConfiguration.xml
+
+import os
+
+def mangle(tree):
+    tags = tree.xpath("/jenkins.model.JenkinsLocationConfiguration/jenkinsUrl")
+    if not tags:
+        return False
+    for tag in tags:
+        tag.text = os.getenv("JENKINS_URL")

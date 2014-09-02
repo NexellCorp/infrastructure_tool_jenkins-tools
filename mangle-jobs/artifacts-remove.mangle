@@ -1,0 +1,13 @@
+# Disable Jenkins builtin artifact archiving (part of migration to snapshots.linaro.org)
+
+from mangle_helper import *
+
+
+def mangle(tree):
+    cfg = get_build_config(tree)
+    if cfg.get("BUILD_TYPE", "build-android") != "build-android":
+        return
+    tags = tree.xpath('//hudson.tasks.ArtifactArchiver')
+    if not tags:
+        return
+    tags[0].getparent().remove(tags[0])

@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jenkins.plugins.publish__over__ssh.BapSshPublisherPlugin_-Descriptor plugin="publish-over-ssh@1.10">
+  <hostConfigurations>
+    <jenkins.plugins.publish__over__ssh.BapSshHostConfiguration>
+      <name>snapshots.linaro.org</name>
+      <hostname>snapshots.linaro.org</hostname>
+      <username>linaro-ci-publish</username>
+      <secretPassword></secretPassword>
+      <remoteRootDir>uploads</remoteRootDir>
+      <port>22</port>
+      <commonConfig class="jenkins.plugins.publish_over_ssh.BapSshCommonConfiguration">
+        <secretPassphrase></secretPassphrase>
+        <key></key>
+        <keyPath></keyPath>
+        <disableAllExec>false</disableAllExec>
+      </commonConfig>
+      <timeout>300000</timeout>
+      <overrideKey>true</overrideKey>
+      <disableExec>false</disableExec>
+      <keyInfo>
+        <secretPassphrase></secretPassphrase>
+        <key></key>
+        <keyPath>/home/ubuntu/snapshots-sync/linaro-ci-publish</keyPath>
+      </keyInfo>
+    </jenkins.plugins.publish__over__ssh.BapSshHostConfiguration>
+    <jenkins.plugins.publish__over__ssh.BapSshHostConfiguration>
+      <name>snapshots.linaro.org file-move</name>
+      <hostname>snapshots.linaro.org</hostname>
+      <username>linaro-ci-publish-trigger</username>
+      <secretPassword></secretPassword>
+      <remoteRootDir></remoteRootDir>
+      <port>22</port>
+      <commonConfig class="jenkins.plugins.publish_over_ssh.BapSshCommonConfiguration" reference="../../jenkins.plugins.publish__over__ssh.BapSshHostConfiguration/commonConfig"/>
+      <timeout>300000</timeout>
+      <overrideKey>true</overrideKey>
+      <disableExec>false</disableExec>
+      <keyInfo>
+        <secretPassphrase></secretPassphrase>
+        <key></key>
+        <keyPath>/home/ubuntu/snapshots-sync/linaro-ci-publish-trigger</keyPath>
+      </keyInfo>
+    </jenkins.plugins.publish__over__ssh.BapSshHostConfiguration>
+{% if jenkins_ssh_publishers_file is defined %}
+{% include jenkins_ssh_publishers_file %}
+
+{% endif %}
+  </hostConfigurations>
+  <commonConfig reference="../hostConfigurations/jenkins.plugins.publish__over__ssh.BapSshHostConfiguration/commonConfig"/>
+  <defaults class="jenkins.plugins.publish_over_ssh.options.SshOverrideDefaults">
+    <overrideInstanceConfig>
+      <continueOnError>false</continueOnError>
+      <failOnError>false</failOnError>
+      <alwaysPublishFromMaster>true</alwaysPublishFromMaster>
+    </overrideInstanceConfig>
+    <overrideParamPublish>
+      <parameterName></parameterName>
+    </overrideParamPublish>
+    <overridePublisher>
+      <configName></configName>
+      <useWorkspaceInPromotion>false</useWorkspaceInPromotion>
+      <usePromotionTimestamp>false</usePromotionTimestamp>
+      <verbose>false</verbose>
+    </overridePublisher>
+    <overridePublisherLabel>
+      <label></label>
+    </overridePublisherLabel>
+    <overrideRetry>
+      <retries>0</retries>
+      <retryDelay>10000</retryDelay>
+    </overrideRetry>
+    <overrideTransfer>
+      <execCommand></execCommand>
+      <execTimeout>120000</execTimeout>
+      <sourceFiles></sourceFiles>
+      <removePrefix></removePrefix>
+      <remoteDirectory></remoteDirectory>
+      <excludes></excludes>
+      <remoteDirectorySDF>false</remoteDirectorySDF>
+      <flatten>false</flatten>
+      <cleanRemote>false</cleanRemote>
+      <usePty>false</usePty>
+      <noDefaultExcludes>false</noDefaultExcludes>
+      <makeEmptyDirs>false</makeEmptyDirs>
+      <patternSeparator>[, ]+</patternSeparator>
+    </overrideTransfer>
+  </defaults>
+</jenkins.plugins.publish__over__ssh.BapSshPublisherPlugin_-Descriptor>

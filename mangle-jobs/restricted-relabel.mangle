@@ -1,0 +1,11 @@
+# Replace labels for restricted jobs
+
+
+def mangle(tree):
+    nodes = tree.xpath("//assignedNode")
+    if not nodes:
+        return False
+    labels = nodes[0].text
+    if "private" not in labels:
+        return False
+    nodes[0].text = "ec2-restricted"

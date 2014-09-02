@@ -1,0 +1,25 @@
+# Add Fingerprinting config
+
+from lxml.etree import fromstring
+
+
+new_node = fromstring("""\
+    <hudson.tasks.Fingerprinter>
+      <targets>build/fingerprints/*</targets>
+      <recordBuildArtifacts>false</recordBuildArtifacts>
+    </hudson.tasks.Fingerprinter>
+""")
+
+def mangle(tree):
+    if tree.xpath("//hudson.tasks.Fingerprinter"):
+        # Needed config already there - don't change
+        return False
+
+    parent_node = tree.xpath('/project/publishers')[0]
+    parent_node.append(new_node)
+
+    # Adjust whitespacing around a node for pretty formatting
+    # You may need to update thelines below, based on a test run,
+    # if you reuse this script for another case.
+#    new_node.getprevious().tail += "  "
+    new_node.tail = "\n    "

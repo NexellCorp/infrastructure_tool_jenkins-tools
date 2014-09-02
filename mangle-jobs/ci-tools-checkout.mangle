@@ -1,0 +1,9 @@
+# Update initial startup shell commands for a job
+
+old_cmd = 'bzr branch lp:~linaro-infrastructure/linaro-ci/lci-build-tools'
+new_cmd = 'bzr branch lp:linaro-ci lci-build-tools'
+
+def mangle(tree):
+    tags = tree.xpath('/project/builders/hudson.tasks.Shell/command')
+    if tags:
+        tags[0].text = tags[0].text.replace(old_cmd, new_cmd)

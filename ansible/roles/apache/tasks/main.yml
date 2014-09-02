@@ -1,0 +1,17 @@
+- name: Install Apache2
+  apt: pkg={{item}}
+  sudo: yes
+  with_items:
+      - apache2
+      # This is actually needed only for android-build frontend app
+      - libapache2-mod-wsgi
+- name: Enable Apache modules
+  command: a2enmod {{item}} creates=/etc/apache2/mods-enabled/{{item}}.load
+  sudo: yes
+  with_items:
+      - proxy
+      - proxy_http
+      - headers
+      - rewrite
+      - expires
+      - ssl

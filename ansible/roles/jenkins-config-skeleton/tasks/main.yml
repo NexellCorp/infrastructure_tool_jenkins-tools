@@ -1,0 +1,57 @@
+- name: Verify Jenkins parameters
+  fail: msg="crowd_user and crowd_passwd should be defined in {{private_vars}}"
+  when: jenkins_auth == "crowd" and (crowd_user is not defined or crowd_passwd is not defined)
+
+#- name: Set up minimal Jenkins configuration skeleton
+#  # This requires recursive copy patch
+#  copy: backup=yes src=jenkins-config/ dest=/var/lib/jenkins/ owner=jenkins
+#  sudo: yes
+#  notify:
+#      - Restart Jenkins
+
+- name: Set up Jenkins job root dir
+  file: state=directory dest=/var/lib/jenkins/jobs owner=jenkins mode=0755
+  sudo: yes
+
+- name: Set up minimal Jenkins configuration skeleton 1
+  file: state=directory dest=/var/lib/jenkins/{{item}} owner=jenkins
+  sudo: yes
+  with_items:
+    - users/admin/
+    - jobs/blank/
+
+- name: Set up minimal Jenkins configuration skeleton 2
+  copy: backup=yes src=jenkins-config/{{item}} dest=/var/lib/jenkins/{{item}} owner=jenkins
+  sudo: yes
+  with_items:
+    - users/admin/config.xml
+    - jobs/blank/config.xml
+  notify:
+      - Restart Jenkins
+
+- when: jenkins_managed_config
+  name: Create managed Jenkins config file
+  template: backup=yes src=jenkins-config/config.xml dest=/var/lib/jenkins/
+            owner=jenkins mode=0644
+  sudo: yes
+  notify:
+      - Restart Jenkins
+
+- when: not jenkins_managed_config
+  name: Create Ansible-speced Jenkins config file as config.xml.ansible
+  template: backup=yes src=jenkins-config/config.xml dest=/var/lib/jenkins/config.xml.ansible
+            owner=jenkins mode=0644
+  sudo: yes
+  notify:
+      - Restart Jenkins
+- when: not jenkins_managed_config
+  name: Copy config.xml.ansible to config.xml if configuring first time (fail means config.xml is not updated)
+  shell: "cd /var/lib/jenkins; [ ! -f config.xml ] && cp config.xml.ansible config.xml"
+  ignore_errors: yes
+  sudo: yes
+  sudo_user: jenkins
+
+- name: Create Jenkins external address config
+  template: src=jenkins-config/hudson.tasks.Mailer.xml
+            dest=/var/lib/jenkins/hudson.tasks.Mailer.xml owner=jenkins mode=0644 backup=yes
+  sudo: yes

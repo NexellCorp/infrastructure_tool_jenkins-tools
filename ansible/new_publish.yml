@@ -1,0 +1,46 @@
+# Note: older development, not ported to fit with new plays!
+---
+- hosts: publishing
+  gather_facts: no
+  connection: local
+  user: root
+  vars:
+  - root: ''
+  - publish_home: $root/mnt/publish
+  # not ideal
+  - keys_dir: $publish_home
+  tasks:
+  - name: Create top-level publishing dir
+    # Home dir must be owned by root for ssh ChrootDirectory to work
+    file: dest=$publish_home state=directory mode=0755 owner=root group=root
+  - name: Create publish group
+    group: name=publish state=present
+  - name: Create publish-copy user
+    user: name=publish-copy comment='Publishing - transfer user'
+          group=publish home=$publish_home
+          generate_ssh_key=yes
+          ssh_key_file=$keys_dir/publish-copy
+  - name: Create publish-trigger user
+    user: name=publish-trigger comment='Publishing - trigger user'
+          group=publish home=$publish_home
+          generate_ssh_key=yes
+          ssh_key_file=$keys_dir/publish-trigger
+  - name: Create upload dir
+    # Actual uploads will happen to this dir
+    # publish-copy should have write access there, publish-trigger
+    # generally only read (cleanup can be handled by cronjob)
+    file: dest=$publish_home/uploads state=directory mode=0755 owner=publish-copy group=publish
+
+
+  - name: Create /etc/ssh/user-authorized-keys/
+    file: dest=$root/etc/ssh/user-authorized-keys/ state=directory mode=0755 owner=root group=root
+
+  - name: Setup publish-copy user SSH restrictions
+    template: src=templates/publish-copy.j2
+              dest=$root/etc/ssh/user-authorized-keys/publish-copy
+              owner=root group=root mode=0644
+
+  - name: Setup publish-trigger user SSH restrictions
+    template: src=templates/publish-trigger.j2
+              dest=$root/etc/ssh/user-authorized-keys/publish-trigger
+              owner=root group=root mode=0644

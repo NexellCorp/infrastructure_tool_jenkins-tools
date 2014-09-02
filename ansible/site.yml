@@ -1,0 +1,5 @@
+# Main site file - deploys everything
+---
+- include: jenkins.yml
+- include: frontend.yml
+- include: reposeed.yml

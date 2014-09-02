@@ -1,0 +1,120 @@
+- name: Install Frontend package dependencies
+  apt: pkg={{item}}
+  sudo: yes
+  with_items:
+      - libapache2-mod-wsgi
+      - python-virtualenv
+      - python-lxml
+      - python-openid
+      - tidy
+      - unzip
+      - python-cssutils
+      - python-lxml
+      - sqlite3
+      # ??
+      - python-pycurl
+
+- name: Create frontend user
+  user: name=build-system-frontend comment="Android Build Frontend"
+  sudo: yes
+
+- name: Create Frontend var dir
+  file: state=directory path=/var/lib/linaro-abs-frontend/ owner=www-data
+  sudo: yes
+
+- name: Install Frontend/Jenkins auth password
+  copy: content={{ lookup('password', cred_store + '/jenkins/frontend') }}
+        dest=/var/lib/linaro-abs-frontend/jenkins-password mode=0640
+  sudo_user: www-data
+  sudo: yes
+  when: not jenkins_config_from_backup
+
+- name: Install Frontend/Jenkins auth password
+  copy: content={{jenkins_frontend_passwd}}
+        dest=/var/lib/linaro-abs-frontend/jenkins-password mode=0640
+  sudo_user: www-data
+  sudo: yes
+  when: jenkins_config_from_backup
+
+- name: Check out Frontend
+  git: name={{linaro_android_frontend_repo}} version={{linaro_android_frontend_rev}}
+       dest=~/frontend-{{linaro_android_frontend_rev}}
+  sudo_user: build-system-frontend
+  sudo: yes
+  tags:
+    - git
+
+- name: Create Frontend current version symlink
+  file: state=link src=~/frontend-{{linaro_android_frontend_rev}}/ dest=~/frontend
+  sudo_user: build-system-frontend
+  sudo: yes
+  tags:
+    - git
+
+- name: Install Frontend
+  shell: cd ~/frontend; make
+  sudo_user: build-system-frontend
+  sudo: yes
+
+- name: Create production config
+  # TODO: actually replace SECRET_KEY
+  template: src=settings_prod.py dest=~build-system-frontend/ mode=0640 owner=build-system-frontend group=www-data
+  sudo: yes
+  notify:
+    - Restart Apache
+- name: Create config symlink
+  # wart: relative symlinks not supported
+  file: state=link src=~/settings_prod.py dest=~/frontend/settings_prod.py
+  sudo_user: build-system-frontend
+  sudo: yes
+- name: Create DB
+  shell: cd ~build-system-frontend/frontend; ./bin/manage syncdb --noinput --settings settings_prod
+  sudo_user: www-data
+  sudo: yes
+  # Fixture is automatically installed by syncdb
+  #sudo -u www-data ./bin/manage loaddata --settings settings_prod group-fixture.json
+
+- name: Download YUI3
+  get_url: url=http://yui.zenfs.com/releases/yui3/yui_3.3.0.zip dest=~/yui_3.3.0.zip
+  sudo_user: build-system-frontend
+  sudo: yes
+  register: download_yui3
+- name: Extract YUI3
+  shell: cd ~; unzip -o -q yui_3.3.0.zip
+  sudo_user: build-system-frontend
+  sudo: yes
+  when: download_yui3.changed
+- name: Checkout patched lazr-js
+  bzr: name=lp:~mwhudson/lazr-js/combo-mod_wsgi-config dest=~/lazr-js
+  #     version=?
+  sudo_user: build-system-frontend
+  sudo: yes
+- name: Setup lazr-js 1/3
+  file: state=directory path=~/lazr-js/{{item}}
+  with_items:
+      - build/3.3.0
+      - build/gallery
+  sudo_user: build-system-frontend
+  sudo: yes
+- name: Setup lazr-js 2/3
+  file: state=link src=~/yui/build/ dest=~/lazr-js/build/3.3.0/build
+  sudo_user: build-system-frontend
+  sudo: yes
+- name: Setup lazr-js 3/3
+  file: state=directory path=~/lazr-js/build/gallery/{{item}}
+  with_items:
+      - gallery-overlay-extras
+      - gallery-outside-events
+      - gallery-base64
+  sudo_user: build-system-frontend
+  sudo: yes
+
+- name: Fetch YUI gallery components
+  get_url: url=http://yui.yahooapis.com/combo?gallery-2010.12.16-18-24/build/{{item}}/{{item}}-min.js
+           dest=~/lazr-js/build/gallery/{{item}}/{{item}}-min.js
+  with_items:
+      - gallery-overlay-extras
+      - gallery-outside-events
+      - gallery-base64
+  sudo_user: build-system-frontend
+  sudo: yes

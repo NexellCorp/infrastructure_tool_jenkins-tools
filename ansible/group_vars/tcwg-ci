@@ -1,0 +1,7 @@
+site_name: tcwg.ci.linaro.org
+hosttype: tcwg-ci
+
+jenkins_private: yes
+jenkins_slaves_file: files/jenkins_slaves.xml.tcwg-ci
+jenkins_ssh_publishers_file: "{{secrets_dir}}/jenkins_ssh_publishers.xml.tcwg-ci"
+jenkins_master_executors: 2

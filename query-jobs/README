@@ -1,0 +1,25 @@
+This is a script to query Jenkins job configs, on the level of raw XML files.
+
+Run ./query-jobs --help for list of optoins.
+
+
+Example usage:
+
+./query-jobs //hudson.triggers.TimerTrigger --filter
+
+    List all regularly repeating jobs.
+
+./query-jobs "disabled='false' and //hudson.triggers.TimerTrigger" --filter
+
+    List all regularly repeating jobs, taking into account that some of them may be
+    disabled.
+
+./query-jobs //hudson.triggers.TimerTrigger/spec --filter -v
+
+    List crontab specs for all regularly repeating jobs.
+
+./query-jobs //daysToKeep --filter-not --filter-jobname='-(release|toolchain)'
+
+    List daily (not toolchain and not release) jobs which don't have build
+    expriation configured (i.e. would use up disk space without limit).
+

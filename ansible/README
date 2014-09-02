@@ -1,0 +1,90 @@
+This directory contains proof-of-concept scripts for deploying Jenkins &
+Android Build infrastructure using Ansible http://www.ansibleworks.com/ .
+
+Development deployment
+----------------------
+
+To deploy development instance of particular Jenkins service to locally
+run Vagrant virtual machine, first select one of "hosts-devel-*" files
+corresponding to a particular service. Suppose, we want to deploy "tcwg-ci"
+service, and thus will use hosts-devel-tcwg-ci inventory file.
+
+0. Install vagrant and import "trusty32" box:
+
+Some newer version of vagrant:
+
+    vagrant box add ubuntu/trusty32
+
+Older version of vagrant:
+
+    vagrant box add trusty32 https://vagrantcloud.com/ubuntu/trusty32/version/1/provider/virtualbox.box
+
+1. Create new VM with:
+
+    vagrant up
+
+You may want to check that you can login into VM (no host key conflicts, etc.):
+
+    ssh -p2222 vagrant@localhost
+
+You can skip this first time, but if you get early SSH errors running
+Ansible in following steps, try the command above to diagnose.
+
+2. Check which hosts are targetted by the deployment process:
+
+    ansible-playbook -i hosts-devel-tcwg-ci -l "tcwg-ci:&vagrant" site.yml --list-hosts
+
+    '-l "tcwg-ci:&vagrant"' means "limit operations to hosts which are both
+    in 'tcwg-ci' and 'vagrant' groups".
+
+Verify that this is consistent with your expectations. For Vagrant case, that should
+be localhost.
+
+3. Deploy infrastructure:
+
+    ansible-playbook -i hosts-devel-tcwg-ci -l "tcwg-ci:&vagrant" site.yml
+
+Add -v for verboseness, repeat for more. Use other *.yml to deploy just parts
+of infrastructure (e.g. jenkins.yml will deploy just Jenkins service with
+dependencies like Apache).
+
+4. Once deployment is done, Jenkins can be accessed as https://localhost:6443/ ,
+Admin access: admin:admin.
+
+
+Setting up Jenkins master from production config backup
+-------------------------------------------------------
+The above approach creates Jenkins config from a set of templates and
+high-level configuration parameters, that should be enough to bootstrap
+a new adhoc server, but doesn't scale to cloning existing high-volume
+production servers, like ci.linaro.org. For them, using config backup
+from existing server is more viable approach (so far). Of course,
+this raises questions of idempotency and declarative deployment
+specification, as well as security of resulting deployment. So, that's
+known issue, where formal configuration management clashes with
+imperfect reality. So, such set up mode has "imperative" parts, which
+run only once, and skipped on subsequent runs (if it was detected that
+they were already executed). This raises question if it should be supported
+to force re-running them - such operation would be regularly needed
+during initial configman development, and later during system testing.
+The current answer is "no", because price of mistake may be too high
+for production server, and because there's concern of explosive growth
+of number of parameters. So, currently, if you want to redeploy config
+for such setup from git, you need to ssh to the server and remove entire
+old config yourself.
+
+Currently, "from production backup" mode is default for production hosts.
+But as a new production host starts as a staging host, this can be overriden:
+
+ansible-playbook -i hosts-devel-ci -l "ci:&ec2" jenkins.yml -e jenkins_config_from_backup=true
+
+
+Managing production server
+--------------------------
+
+To simplify management of production server(s), helper scripts which execute
+specific set of tasks (use Ansible tags, etc.) are provided:
+
+- update-production-jenkins.sh
+
+Please refer to individual scripts for more info.

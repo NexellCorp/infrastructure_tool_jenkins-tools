@@ -1,0 +1,8 @@
+- name: Check for secrets repository
+  local_action: stat path={{secrets_dir}}/main.yml
+  register: secrets_exist
+  when: production == True
+
+- name: Fail if secrets repository needed, but not available
+  fail: msg="Production credentials repository not found"
+  when: production and secrets_exist.stat.exists == False

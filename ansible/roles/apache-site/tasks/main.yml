@@ -1,0 +1,19 @@
+- name: Install Apache site config
+  template: src=files/{{config}}.conf dest=/etc/apache2/sites-available/{{config}}.conf mode=0644 backup=yes
+  sudo: yes
+  notify:
+      - Restart Apache
+- name: Enable site config
+  command: a2ensite {{config}} creates=/etc/apache2/sites-enabled/{{config}}
+  sudo: yes
+  register: result
+  changed_when: "'already enabled' not in result.stdout"
+  notify:
+      - Restart Apache
+- name: Disable OS default site config
+  command: a2dissite 000-default
+  sudo: yes
+  register: result
+  changed_when: "'already disabled' not in result.stdout"
+  notify:
+      - Restart Apache

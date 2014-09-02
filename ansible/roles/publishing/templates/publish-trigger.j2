@@ -1,0 +1,1 @@
+command="/home/ubuntu/new-publish/utils/new-publish/trigger ${SSH_ORIGINAL_COMMAND#* }",no-pty,no-port-forwarding,no-X11-forwarding,no-agent-forwarding {{ lookup('file', keys_dir + '/publish-trigger.pub') }}

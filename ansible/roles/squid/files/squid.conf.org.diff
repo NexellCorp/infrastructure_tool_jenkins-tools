@@ -1,0 +1,41 @@
+This is patch against default config of squid3-3.3.8-1ubuntu6 (as shipped
+by Ubuntu 14.04). As it's not immediately clear if Squid supports conf.d
+scheme to add just the needed changes, we actually deploy complete config
+with these changes, and this diff is provided just for reference.
+
+TODO: Figure out the above.
+
+--- squid.conf.org	2014-06-07 17:19:49.480115826 +0300
++++ squid.conf	2014-06-07 17:19:36.800109594 +0300
+@@ -898,11 +898,12 @@
+ # Example rule allowing access from your local networks.
+ # Adapt to list your (internal) IP networks from where browsing
+ # should be allowed
+-#acl localnet src 10.0.0.0/8	# RFC1918 possible internal network
++acl localnet src 10.0.0.0/8	# RFC1918 possible internal network
+ #acl localnet src 172.16.0.0/12	# RFC1918 possible internal network
+ #acl localnet src 192.168.0.0/16	# RFC1918 possible internal network
+ #acl localnet src fc00::/7       # RFC 4193 local private network range
+ #acl localnet src fe80::/10      # RFC 4291 link-local (directly plugged) machines
++acl safe_dst_host dstdomain .linaro.org .kernel.org security.ubuntu.com private-ppa.launchpad.net ppa.launchpad.net .archive.ubuntu.com ports.ubuntu.com .googlesource.com
+ 
+ acl SSL_ports port 443
+ acl Safe_ports port 80		# http
+@@ -1053,7 +1054,8 @@
+ # Example rule allowing access from your local networks.
+ # Adapt localnet in the ACL section to list your (internal) IP networks
+ # from where browsing should be allowed
+-#http_access allow localnet
++http_access deny !safe_dst_host
++http_access allow localnet
+ http_access allow localhost
+ 
+ # And finally deny all other access to this proxy
+@@ -2998,6 +3000,7 @@
+ 
+ # Uncomment and adjust the following to add a disk cache directory.
+ #cache_dir ufs /var/spool/squid3 100 16 256
++cache_dir ufs /mnt/spool/squid/ 30000 16 256
+ 
+ #  TAG: store_dir_select_algorithm
+ #	How Squid selects which cache_dir to use when the response

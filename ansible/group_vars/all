@@ -1,0 +1,48 @@
+# These are global variables, applying to every play
+---
+ansible_ssh_port: 22
+
+# We could reference secrets outside of playbook dir for most things,
+# except for templates, see https://github.com/ansible/ansible/issues/7106
+# So, we have to make a symlink inside playbook dir and reference it such.
+#secrets_dir: ../../ansible-secrets-jenkins
+secrets_dir: secrets
+
+# The path is relative to roles' main.yml file. Do not use in non-role tasks!
+# TODO: Ansible really should provide var for top-level playbook dir
+cred_store: ../../../{{secrets_dir}}/generated/{{inventory_hostname}}_{{ansible_ssh_port}}
+
+# Production/development setup type
+production: no
+
+# File holding generic private variables
+private_vars: "{{secrets_dir}}/main.yml"
+
+# By default, generate self-signed SSL certificate
+ssl_cert_self_signed: yes
+
+# Whether to take Jenkins config from backup repository, or
+# instantiate from template, based on high-level options below
+# Default is yes for production hosts, no otherwise.
+jenkins_config_from_backup: "{{production}}"
+
+## Setting below mostly take effect only if "jenkins_config_from_backup: no"
+
+# Jenkins setup is by default non-private - override as needed
+jenkins_private: no
+
+# "native" or "crowd". Crowd requires private credentials.
+jenkins_auth: native
+
+jenkins_managed_config: yes
+# It's generally insecure to execute on master, so we have default as 0
+jenkins_master_executors: 0
+
+# Whether to set up Jenkins SSH publishing. Requires private credentials.
+jenkins_setup_ssh_publish: no
+
+# Jenkins will be accessible at this absolute URL. This is server root by default,
+# unless there's some kind of frontend is running
+jenkins_prefix: /
+
+jenkins_url: https://{{site_name}}{{jenkins_prefix}}

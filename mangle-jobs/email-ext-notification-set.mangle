@@ -1,0 +1,20 @@
+#
+# Update email notification recepient list
+#
+
+from mangle_helper import *
+
+
+builders = 'linaro-android-builder-notifications@linaro.org'
+restricted_builders = 'linaro-android-restricted-builder-notifications@linaro.org'
+
+def mangle(tree):
+    if not tree.xpath('//hudson.plugins.emailext.ExtendedEmailPublisher'):
+        # If node doesn't exist do nothing.
+        return
+    tags = tree.xpath('/project/publishers/hudson.plugins.emailext.ExtendedEmailPublisher/recipientList')
+    cfg = get_build_config(tree)
+    if cfg.get("BUILD_TYPE", "build-android") == "build-android-restricted":
+        tags[0].text = restricted_builders
+    else:
+        tags[0].text = builders

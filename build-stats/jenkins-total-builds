@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Calculate total number of builds present in archive
+find /var/lib/jenkins/jobs -name log | wc -l

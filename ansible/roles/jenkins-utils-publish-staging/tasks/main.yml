@@ -1,0 +1,8 @@
+- name: Reconfigure SSH Publish Plugin use staging.snapshots.linaro.org
+  command: ./mangle-jobs ssh-publish-plugin-set-staging.mangle
+           --file=/var/lib/jenkins/jenkins.plugins.publish_over_ssh.BapSshPublisherPlugin.xml
+           --backup --really
+           chdir=linaro-jenkins-tools/mangle-jobs/
+  when: "not production and jenkins_config_from_backup"
+  tags:
+    - mangle-jobs

@@ -1,0 +1,22 @@
+# Add build-timeout plugin setup for build dependencies
+
+#from lxml.etree import Element
+from lxml.etree import fromstring
+
+new_node = """\
+    <hudson.plugins.build__timeout.BuildTimeoutWrapper>
+      <timeoutMinutes>150</timeoutMinutes>
+      <failBuild>false</failBuild>
+    </hudson.plugins.build__timeout.BuildTimeoutWrapper>
+"""
+
+def mangle(tree):
+    if tree.xpath("//hudson.plugins.build__timeout.BuildTimeoutWrapper"):
+        # Already there
+        return
+    tag = tree.xpath('/project/buildWrappers')[0]
+    node = fromstring(new_node)
+    tag.append(node)
+    if node.getprevious():
+        node.getprevious().tail += "  "
+    node.tail = "\n  "

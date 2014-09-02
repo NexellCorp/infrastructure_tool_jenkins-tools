@@ -1,0 +1,11 @@
+# Update SSH Publisher Plugin config to use staging server
+# This should be run against
+# jenkins.plugins.publish_over_ssh.BapSshPublisherPlugin.xml
+
+def mangle(tree):
+    tags = tree.xpath("//jenkins.plugins.publish__over__ssh.BapSshHostConfiguration/hostname")
+    if not tags:
+        return False
+    for tag in tags:
+        if tag.text == "snapshots.linaro.org":
+            tag.text = "staging.snapshots.linaro.org"

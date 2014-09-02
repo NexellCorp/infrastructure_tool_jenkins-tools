@@ -1,0 +1,92 @@
+Intro
+-----
+mangle-jobs is a scripting framework to perform mass migration of Jenkins
+job definitions. The motivataion for such script is that, the way
+linaro-android-cloud-buildd is used, all (or large cluster) of jobs
+represent the same type of build process, just parameterized with
+specific settings (Android and toolchain versions, etc.) Thus, many
+changes needed - for example, exporting additional build artifact, or
+enabling some plugin - should be applied to all jobs (or large subset)
+at the same time. Having an automated scripting framework for such
+migrations saves from doing time-consuming and error-prone manual changes
+via Jenkins UI for lot of jobs. The drawback is that migration is performed
+on the XML-encoded content, so some development and XML processing
+familiarity is required. However, due to XPath and LXML library which
+implements its support, migration development is sufficiently easy, and
+there's growing collection of existing migrations scripts, to serve
+as example and templates for new usecases.
+
+mangle-jobs script
+------------------
+mangle-jobs script allows to run a "mangle" (migration) script for all
+jobs present in Jenkins and submit results back to server for permanent
+storage. A mangle script operates on an XML representation of job config,
+and can apply arbitrary Python algorithm to it (including conditionals
+to apply to a subset of jobs). Besides production mode of updating jobs
+in a networked Jenkins server, mangle-jobs also offers extensive dry-run
+and testing capabilities, suitable for mangle script development and
+pre-production testing.
+
+Mangle script development workflow
+----------------------------------
+Basic mangle-jobs workflow is as follows:
+
+1. Figure out what XML changes must be performed. For example, select
+a particular job in Jenkins, make a backup copy of its config, make
+needed changes via Jenkins UI, and diff job config against the backup
+copy.
+
+2. Find existing mangle script performing changes close to ones needed.
+As noted above, there's a good selection of such scripts, and it makes
+little sense to develop a new script from scratch, this is perfect
+example when program-by-example technique helps.
+
+3. Make a copy of template you found and make needed changes.
+
+4. Take the config backup copy you made earlier and run mangle-jobs on it
+in test mode:
+
+$ ./mangle-jobs <your_script.mangle> --file=<config_backup.xml>
+
+You will see a textual diff of old and new config, highlighting the changes
+your script made. Verify that they are as expected, and repeat from step 3
+if needed.
+
+5. You are ready to perform en-masse pre-production test now. You should have
+Jenkins username with appropriate permissions and its password or API key
+(recommended) handy. The API key can found in Jenkins by clicking you username
+in the top right corner, then Configure in menu. Password/API key will be
+prompted on teh console. If you really need that, you can put the credential
+in the file and refer to it with --passwd-file=<passwd_file> to avoid
+interactive prompts.
+
+$ ./mangle-jobs --user=<user> <your_script.mangle>
+
+This will run your script repeatedly for each job store in Jenkins server and
+will show aggregated diff output. Review it carefully to watch for anomalities
+and corner cases. Repeat from step 3 if needed.
+
+6. Once you're absolutely sure that the changes performed by your mangle script
+are correct, run it in the production update mode:
+
+$ ./mangle-jobs --user=<user> <your_script.mangle> --really
+
+Mangle script details
+---------------------
+A mangle script is standalone Python module. It should define a function
+mangle(), accepting single parameter - elemnt tree, parsed from XML job
+config with lxml.etree.fromstring(). The function should perform needed
+transformation on the tree (in place).
+
+To get speciifics of command-line arguments and options, run mangle-jobs
+with --help option.
+
+Known issues
+------------
+XML dialects produced by Jenkins and by mangle-jobs tool may not necessarily
+match. This means that while they may match with respect to underlying XML
+syntax (node structure and content), their textual representation may be
+different, leading to spurious differences in test run output. There's
+ongoing effort to make output XML rendition of mangle-jobs correspond to
+the dialect used by Jenkins, but there still may be spurious change noise
+in the output.

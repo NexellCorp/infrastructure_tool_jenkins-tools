@@ -1,0 +1,8 @@
+#- name: Create seed directory
+#  file: state=directory path=/mnt2/seed
+#  sudo: yes
+
+- name: Create seed symlink
+  file: state=link src=jenkins/jobs/_extra/seed dest=/mnt2/seed
+        force=yes
+  sudo: yes

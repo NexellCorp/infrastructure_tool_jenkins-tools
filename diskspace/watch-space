@@ -1,0 +1,2 @@
+#!/bin/sh
+df | awk '$6=="/mnt2" {if ($4 < 1000000) print "Less than 1Gb left in JENKINS_HOME: " $4 "Kb"}'

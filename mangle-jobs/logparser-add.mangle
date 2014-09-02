@@ -1,0 +1,20 @@
+# Add Log Parser plugin application to jobs
+
+#from lxml.etree import Element
+from lxml.etree import fromstring
+
+def mangle(tree):
+    if tree.xpath("//hudson.plugins.logparser.LogParserPublisher"):
+        # Already there
+        return
+    tag = tree.xpath('//publishers')[0]
+    node = fromstring("""\
+    <hudson.plugins.logparser.LogParserPublisher>
+      <unstableOnWarning>false</unstableOnWarning>
+      <failBuildOnError>false</failBuildOnError>
+      <parsingRulesPath>/var/lib/jenkins/userContent/android.parse</parsingRulesPath>
+    </hudson.plugins.logparser.LogParserPublisher>
+""")
+    tag.append(node)
+    node.getprevious().tail += "  "
+    node.tail = "\n  "

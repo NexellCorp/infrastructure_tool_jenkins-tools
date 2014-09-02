@@ -1,0 +1,5 @@
+#!/bin/sh
+
+JENKINS_ROOT=/var/lib/jenkins/jobs
+find $JENKINS_ROOT -name 'build.xml*' | xargs cat | awk '/<duration>.+<\/duration>/ { dur += gensub(".*>([0-9]+).*", "\\1", "g"); }
+END { printf("%.2fhrs\n", dur / 1000 / 60 / 60); }'

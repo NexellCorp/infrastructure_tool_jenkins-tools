@@ -1,0 +1,16 @@
+- name: Checkout jenkins-linaro-theme
+  git: name=http://git.linaro.org/git/infrastructure/jenkins-linaro-theme.git
+       dest=/var/lib/jenkins/userContent/theme
+  sudo: yes
+  tags:
+    - git
+    - jenkins-install
+
+- name: Enable jenkins-linaro-theme
+  template: src=org.codefirst.SimpleThemeDecorator.xml dest=/var/lib/jenkins/org.codefirst.SimpleThemeDecorator.xml mode=0644
+  sudo: yes
+  notify:
+      - Restart Jenkins
+  sudo: yes
+  tags:
+    - jenkins-install

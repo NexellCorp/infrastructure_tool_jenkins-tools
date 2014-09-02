@@ -1,0 +1,135 @@
+# Add Email notifications
+
+from lxml.etree import fromstring
+from mangle_helper import *
+
+
+builders = 'linaro-android-builder-notifications@linaro.org'
+restricted_builders = 'linaro-android-restricted-builder-notifications@linaro.org'
+
+publisher = """\
+     <hudson.plugins.emailext.ExtendedEmailPublisher>
+       <recipientList>%s</recipientList>
+       <configuredTriggers>
+         <hudson.plugins.emailext.plugins.trigger.UnstableTrigger>
+           <email>
+             <recipientList/>
+             <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+             <body>$PROJECT_DEFAULT_CONTENT</body>
+             <sendToDevelopers>false</sendToDevelopers>
+             <sendToRequester>false</sendToRequester>
+             <includeCulprits>false</includeCulprits>
+             <sendToRecipientList>true</sendToRecipientList>
+             <attachmentsPattern/>
+             <attachBuildLog>false</attachBuildLog>
+             <replyTo/>
+           </email>
+         </hudson.plugins.emailext.plugins.trigger.UnstableTrigger>
+         <hudson.plugins.emailext.plugins.trigger.NotBuiltTrigger>
+           <email>
+             <recipientList/>
+             <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+             <body>$PROJECT_DEFAULT_CONTENT</body>
+             <sendToDevelopers>false</sendToDevelopers>
+             <sendToRequester>false</sendToRequester>
+             <includeCulprits>false</includeCulprits>
+             <sendToRecipientList>true</sendToRecipientList>
+             <attachmentsPattern/>
+             <attachBuildLog>false</attachBuildLog>
+             <replyTo/>
+           </email>
+         </hudson.plugins.emailext.plugins.trigger.NotBuiltTrigger>
+         <hudson.plugins.emailext.plugins.trigger.AbortedTrigger>
+           <email>
+             <recipientList/>
+             <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+             <body>$PROJECT_DEFAULT_CONTENT</body>
+             <sendToDevelopers>false</sendToDevelopers>
+             <sendToRequester>false</sendToRequester>
+             <includeCulprits>false</includeCulprits>
+             <sendToRecipientList>true</sendToRecipientList>
+             <attachmentsPattern/>
+             <attachBuildLog>false</attachBuildLog>
+             <replyTo/>
+           </email>
+         </hudson.plugins.emailext.plugins.trigger.AbortedTrigger>
+         <hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+           <email>
+             <recipientList/>
+             <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+             <body>$PROJECT_DEFAULT_CONTENT</body>
+             <sendToDevelopers>false</sendToDevelopers>
+             <sendToRequester>false</sendToRequester>
+             <includeCulprits>false</includeCulprits>
+             <sendToRecipientList>true</sendToRecipientList>
+             <attachmentsPattern/>
+             <attachBuildLog>false</attachBuildLog>
+             <replyTo/>
+           </email>
+         </hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+         <hudson.plugins.emailext.plugins.trigger.StillFailingTrigger>
+           <email>
+             <recipientList/>
+             <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+             <body>$PROJECT_DEFAULT_CONTENT</body>
+             <sendToDevelopers>false</sendToDevelopers>
+             <sendToRequester>false</sendToRequester>
+             <includeCulprits>false</includeCulprits>
+             <sendToRecipientList>true</sendToRecipientList>
+             <attachmentsPattern/>
+             <attachBuildLog>false</attachBuildLog>
+             <replyTo/>
+           </email>
+         </hudson.plugins.emailext.plugins.trigger.StillFailingTrigger>
+         <hudson.plugins.emailext.plugins.trigger.FixedTrigger>
+           <email>
+             <recipientList/>
+             <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+             <body>$PROJECT_DEFAULT_CONTENT</body>
+             <sendToDevelopers>false</sendToDevelopers>
+             <sendToRequester>false</sendToRequester>
+             <includeCulprits>false</includeCulprits>
+             <sendToRecipientList>true</sendToRecipientList>
+             <attachmentsPattern/>
+             <attachBuildLog>false</attachBuildLog>
+             <replyTo/>
+           </email>
+         </hudson.plugins.emailext.plugins.trigger.FixedTrigger>
+         <hudson.plugins.emailext.plugins.trigger.StillUnstableTrigger>
+           <email>
+             <recipientList/>
+             <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+             <body>$PROJECT_DEFAULT_CONTENT</body>
+             <sendToDevelopers>false</sendToDevelopers>
+             <sendToRequester>false</sendToRequester>
+             <includeCulprits>false</includeCulprits>
+             <sendToRecipientList>true</sendToRecipientList>
+             <attachmentsPattern/>
+             <attachBuildLog>false</attachBuildLog>
+             <replyTo/>
+           </email>
+         </hudson.plugins.emailext.plugins.trigger.StillUnstableTrigger>
+       </configuredTriggers>
+       <contentType>default</contentType>
+       <defaultSubject>$DEFAULT_SUBJECT</defaultSubject>
+       <defaultContent>$DEFAULT_CONTENT</defaultContent>
+       <attachmentsPattern/>
+       <presendScript/>
+       <attachBuildLog>false</attachBuildLog>
+       <replyTo>$DEFAULT_RECIPIENTS</replyTo>
+     </hudson.plugins.emailext.ExtendedEmailPublisher>
+"""
+
+def mangle(tree):
+    if tree.xpath("//hudson.plugins.emailext.ExtendedEmailPublisher"):
+        # Already there
+        return
+    tag = tree.xpath('/project/publishers')[0]
+    cfg = get_build_config(tree)
+    if cfg.get("BUILD_TYPE", "build-android") == "build-android-restricted":
+        node = fromstring(publisher % restricted_builders)
+    else:
+        node = fromstring(publisher % builders)
+    tag.append(node)
+    node.getprevious().tail += "  "
+    node.tail = "\n  "

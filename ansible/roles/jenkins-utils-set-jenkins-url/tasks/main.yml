@@ -1,0 +1,12 @@
+- name: Set Jenkins URL
+  shell: JENKINS_URL=https://{{ansible_ssh_host}}{{jenkins_prefix}} ./mangle-jobs jenkins-url-set.mangle
+           --file=/var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml
+           --backup --really
+           chdir=linaro-jenkins-tools/mangle-jobs/
+  sudo: yes
+  sudo_user: jenkins
+  when: "not production and jenkins_config_from_backup"
+  notify:
+      - Restart Jenkins
+  tags:
+    - mangle-jobs

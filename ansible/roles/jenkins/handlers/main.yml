@@ -1,0 +1,7 @@
+- name: Restart Jenkins
+  service: name=jenkins state=restarted
+  sudo: yes
+  # Apache proxy module sees that Jenkins is gone and then
+  # goes into some timeout before reconnecting to it again.
+  # Restart forces reconnect ASAP.
+  notify: Restart Apache

@@ -1,0 +1,11 @@
+- name: Install Squid
+  apt: pkg={{item}}
+  sudo: yes
+  with_items:
+    - squid
+  when: hosttype == "ci"
+
+- name: Install Squid config
+  copy: src=squid.conf dest=/etc/squid3/squid.conf
+  sudo: yes
+  when: hosttype == "ci"

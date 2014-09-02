@@ -1,0 +1,15 @@
+# Update default build timeout value to new default.
+# Don't touch custom timeout times
+
+OLD_DEFAULT = "275"
+NEW_DEFAULT = "375"
+
+
+def mangle(tree):
+    tags = tree.xpath("//hudson.plugins.build__timeout.BuildTimeoutWrapper/timeoutMinutes")
+    if not tags:
+        return False
+    tag = tags[0]
+    if tag.text != OLD_DEFAULT:
+        return False
+    tag.text = NEW_DEFAULT

@@ -1,0 +1,18 @@
+- name: Set up Jenkins Publish-over-SSH config file
+  template: backup=yes src=jenkins.plugins.publish_over_ssh.BapSshPublisherPlugin.xml
+            dest=/var/lib/jenkins/ owner=jenkins backup=yes
+  sudo: yes
+  notify:
+      - Restart Jenkins
+  tags:
+      - template
+- name: Create keys dir
+  file: state=directory path=/home/ubuntu/snapshots-sync
+  sudo: yes
+- name: Copy keys
+  copy: src={{secrets_dir}}/jenkins-publish/{{item}} dest=/home/ubuntu/snapshots-sync/ owner=jenkins mode=0400
+        backup=yes
+  with_items:
+    - linaro-ci-publish
+    - linaro-ci-publish-trigger
+  sudo: yes

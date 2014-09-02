@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if [ -z "$script" ]; then
+    echo "Usage: script=<script> $0 <ansible host selector>"
+    exit 1
+fi
+
+extra=""
+
+if [ "$really" == "true" ]; then
+    extra="$extra --really"
+fi
+
+
+ansible all "$@" \
+    -m command \
+    -a "./mangle-jobs $script --dir=/var/lib/jenkins $extra chdir=linaro-jenkins-tools/mangle-jobs/"

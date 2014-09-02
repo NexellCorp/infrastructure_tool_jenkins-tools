@@ -1,0 +1,32 @@
+- name: Create Jenkins plugin dir
+  file: state=directory path=~jenkins/plugins/ owner=jenkins
+  sudo: yes
+  tags:
+      - jenkins-install
+
+- name: Download Jenkins plugins which override builtin ones
+  get_url: url={{item.url}} dest=~jenkins/plugins/{{item.file}} force=yes owner=jenkins
+  sudo: yes
+  with_items: jenkins_override_plugins
+  notify:
+      - Restart Jenkins
+  tags:
+      - jenkins-install
+
+- name: Pin Jenkins plugins which override builtin ones
+  copy: content="" dest=~jenkins/plugins/{{item.file}}.pinned owner=jenkins mode=0644
+  sudo: yes
+  with_items: jenkins_override_plugins
+  notify:
+      - Restart Jenkins
+  tags:
+      - jenkins-install
+
+- name: Download "normal" Jenkins plugins
+  get_url: url={{item}} dest=~jenkins/plugins/ owner=jenkins
+  sudo: yes
+  with_items: jenkins_plugins
+  notify:
+      - Restart Jenkins
+  tags:
+      - jenkins-install

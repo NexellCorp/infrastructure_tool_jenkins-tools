@@ -1,0 +1,26 @@
+#
+# This script is no longer used!
+#
+# See build-steps-set.mangle & builders.xml
+#
+
+
+new_value = "build/out/target/*/*/*.img," \
+    "build/out/target/*/*/*.img.bz2," \
+    "build/out/target/*/*/*.tar.bz2," \
+    "build/out/target/*/*/MD5SUMS," \
+    "build/out/*.tar.bz2," \
+    "build/out/*.xml," \
+    "build/out/*_config," \
+    "build/out/lava-job-info," \
+    "build/out/linaro_kernel_build_cmds.sh," \
+    "build/out/linaro_android_build_cmds.sh," \
+    "build/out/**/BUILD-INFO.txt," \
+    "build/out/target/product/*/HOWTO_*.txt" \
+    "build/out/target/product/*/howto/HOWTO_*.txt"
+
+def mangle(tree):
+    nodes = tree.xpath('//jenkins.plugins.publish__over__ssh.BapSshTransfer/sourceFiles')
+    # There're few such nodes, ours is first, but extra check to be sure
+    assert nodes[0].text.startswith('build/out/')
+    nodes[0].text = new_value

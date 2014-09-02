@@ -1,0 +1,19 @@
+[vagrant]
+localhost:2222
+
+[ec2-devel]
+# Virtual host name, actual assigned via host_vars
+ec2-devel-host
+
+[ec2:children]
+ec2-devel
+
+[devel:children]
+vagrant
+ec2-devel
+
+[tcwg-ci:children]
+devel
+
+[jenkins-generic:children]
+tcwg-ci

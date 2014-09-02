@@ -1,0 +1,21 @@
+# This play sets up production Jenkins partition/directory structure
+---
+- hosts: production:&ec2
+  gather_facts: no
+  tasks:
+  - name: Prepare jobs volume mount point
+    file: state=directory dest=/mnt2
+    sudo: yes
+  - name: Add jobs volume mount point to /etc/fstab
+    mount: state=mounted src={{job_store_dev}} name=/mnt2 fstype=auto passno=2
+    sudo: yes
+  - name: Prepare jobs volume directory structure
+    file: state=directory dest=/mnt2/jenkins/jobs
+    sudo: yes
+  - name: Prepare Jenkins jobs bind mount point
+    file: state=directory dest=/var/lib/jenkins/jobs
+    sudo: yes
+  - name: Add Jenkins jobs bind mount point to /etc/fstab
+    mount: state=mounted src=/mnt2/jenkins/jobs name=/var/lib/jenkins/jobs
+           fstype=none opts="defaults,bind" passno=0
+    sudo: yes

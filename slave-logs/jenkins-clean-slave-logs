@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Remove old cloud build slave logs
+find /var/lib/jenkins/ -maxdepth 1 -regex '.+/slave-.*\.log\(\.[0-9]+\)?' -mtime +20 | sudo xargs --no-run-if-empty rm

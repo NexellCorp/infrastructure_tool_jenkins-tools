@@ -1,0 +1,11 @@
+# Make 1st of 2 shell scripts we have run using shell-status plugin
+
+#from lxml.etree import Element
+from lxml.etree import fromstring
+
+def mangle(tree):
+    tags = tree.xpath('//hudson.tasks.Shell')
+    if len(tags) != 2:
+        # Already applied
+        return
+    tags[0].tag = "hudson.plugins.shell.ShellWithStatus"

@@ -1,0 +1,8 @@
+- name: Create Jenkins "frontend" user dir
+  file: state=directory dest=/var/lib/jenkins/users/frontend owner=jenkins
+  sudo: yes
+
+- name: Create Jenkins "frontend" user config
+  template: src=jenkins-config/users/frontend/config.xml
+            dest=/var/lib/jenkins/users/frontend/config.xml owner=jenkins
+  sudo: yes

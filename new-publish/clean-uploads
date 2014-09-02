@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# Cronjob to clean up uploads area on master
+#
+
+find /mnt/publish/uploads/ -mindepth 1 -mmin +30 | xargs -n100 rm -rf

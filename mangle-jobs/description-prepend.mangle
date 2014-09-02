@@ -1,0 +1,28 @@
+# This script prepends a notice to each job's description
+# (or replaces such notice if already there).
+
+from mangle_helper import *
+
+
+PREPEND_TEXT = open("header.html").read()
+
+HEADER = "\n<!-- Automatically managed header - do not change, do not add anything before this! -->\n"
+FOOTER = "<!-- End of automatically managed header -->"
+
+def mangle(tree):
+    cfg = get_build_config(tree)
+    build_type = cfg.get("BUILD_TYPE")
+    if not build_type:
+        build_type = cfg.get("SCRIPT_NAME", "build-android")
+    if build_type != "build-android":
+        return
+
+    nodes = tree.xpath('/project/description')
+    if not nodes: return
+    descr = nodes[0].text
+    if descr is None:
+        descr = ""
+    if FOOTER in descr:
+        descr = descr[descr.find(FOOTER) + len(FOOTER):]
+    descr = HEADER + PREPEND_TEXT + "\n" + FOOTER + "\n\n" + descr
+    nodes[0].text = descr

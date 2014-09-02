@@ -1,0 +1,13 @@
+# Removes timer ("cron") triggers of a job.
+# This is useful for sandboxes to avoid unexpected cron jobs runs
+# See also triggers-disable.mangle
+
+from mangle_helper import *
+
+
+def mangle(tree):
+    nodes = tree.xpath('//hudson.triggers.TimerTrigger')
+    if not nodes:
+        return False
+    for n in nodes:
+        remove_node(tree, n)

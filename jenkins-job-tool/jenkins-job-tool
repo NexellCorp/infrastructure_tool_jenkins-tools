@@ -1,0 +1,32 @@
+#!/bin/sh
+set -x
+
+CMD=$1
+HOST=$2
+
+if [ "$CMD" = "list" ]; then
+    rsync ubuntu@$2:/var/lib/jenkins/jobs/
+elif [ "$CMD" = "filelist" ]; then
+    JOB=$3
+    rsync -r ubuntu@$2:/var/lib/jenkins/jobs/$JOB
+elif [ "$CMD" = "get" ]; then
+    JOB=$3
+    rsync -az ubuntu@$2:/var/lib/jenkins/jobs/$JOB .
+elif [ "$CMD" = "put" ]; then
+    JOB=$3
+    if [ "$HOST" = "localhost" ]; then
+        sudo cp -a $JOB /var/lib/jenkins/jobs/
+        sudo chown -R jenkins /var/lib/jenkins/jobs/$JOB
+    else
+        rsync --rsync-path="sudo rsync" -avz $JOB ubuntu@$2:/var/lib/jenkins/jobs/
+        ssh ubuntu@$2 sudo chown -R jenkins /var/lib/jenkins/jobs/$JOB
+    fi
+elif [ "$CMD" = "copy" ]; then
+# doesn't work
+    DESTHOST=$3
+    JOB=$4
+#    rsync --rsync-path="sudo rsync" -a $JOB ubuntu@$2:/var/lib/jenkins/jobs/
+    ssh -A ubuntu@$3 "sudo grep -q $2 ~root/.ssh/known_hosts 2>/dev/null || sudo sh -c 'ssh-keyscan $2 >>~root/.ssh/known_hosts'"
+    ssh -A ubuntu@$3 rsync -a ubuntu@$2:/var/lib/jenkins/jobs/$JOB /tmp
+#    chown -R jenkins /var/lib/jenkins/jobs/$JOB
+fi

@@ -1,0 +1,19 @@
+# Set latest build steps config for all jobs, as provided in build.xml file
+
+from lxml.etree import fromstring
+
+
+builders = open("builders.xml").read()
+
+def mangle(tree):
+    tags = tree.xpath("//jenkins.plugins.publish__over__ssh.BapSshPublisherPlugin")
+    for t in tags:
+        t.getparent().remove(t)
+
+    # Replace existing <builders> content
+    node = fromstring(builders)
+    # Add our complete content after the current <builders>
+    tag = tree.xpath('/project/builders')[0]
+    tag.addnext(node)
+    # And now remove the original <builders>
+    tag.getparent().remove(tag)

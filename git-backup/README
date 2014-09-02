@@ -1,0 +1,28 @@
+This is backup script to automate Jenkins config backup to git on
+Linaro Jenkins services.
+
+Usage:
+
+./backup.sh <server> <command> [<command_params>]
+
+Workflow:
+
+1. ./backup.sh ci.lianro.org status
+
+2. Review which jobs files are changed/added.
+
+3. ./backup.sh ci.lianro.org diff
+
+4. Review diffs.
+
+5. If changes correspond to specific migration, etc., use:
+./backup.sh ci.linaro.org commit "<message>"
+- to record changes with particular commit messages.
+
+6. If changes are generic progress changes, use
+./backup.sh ci.linaro.org commit
+to commit with a generic message.
+
+7. ./backup.sh ci.lianro.org push <linaro.username>
+- push changes to the git repo, valid Linaro username
+is required.

@@ -1,0 +1,4 @@
+# Make no changes, for identity testing
+
+def mangle(tree):
+    pass

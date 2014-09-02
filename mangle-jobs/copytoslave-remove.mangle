@@ -1,0 +1,10 @@
+# Remove CopyToSlave plugin config section
+
+from mangle_helper import *
+
+
+def mangle(tree):
+    tags = tree.xpath('//com.michelin.cio.hudson.plugins.copytoslave.CopyToSlaveBuildWrapper')
+    if not tags:
+        return
+    tags[0].getparent().remove(tags[0])

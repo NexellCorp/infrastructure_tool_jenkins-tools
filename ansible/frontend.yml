@@ -1,0 +1,12 @@
+---
+- hosts: android-build
+  gather_facts: no
+  vars:
+    - linaro_android_frontend_repo: http://git.linaro.org/git/infrastructure/linaro-android-frontend.git
+    - linaro_android_frontend_rev: HEAD
+  vars_files:
+    - ["{{private_vars}}", "vars/empty.yml"]
+  roles:
+    - common
+    - {role: jenkins-user, when: not jenkins_config_from_backup}
+    - frontend

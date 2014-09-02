@@ -1,0 +1,19 @@
+# Add Artifact archiving config
+
+from lxml.etree import fromstring
+
+
+new_node = fromstring("""\
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>build/out/*.xml</artifacts>
+      <latestOnly>false</latestOnly>
+    </hudson.tasks.ArtifactArchiver>
+""")
+
+def mangle(tree):
+    if tree.xpath("//hudson.tasks.ArtifactArchiver"):
+        # Needed config already there - don't change
+        return False
+
+    parent_node = tree.xpath('/project/publishers')[0]
+    parent_node.insert(0, new_node)

@@ -1,0 +1,11 @@
+# Update initial startup shell commands for a job
+
+new_cmd = '''\
+rm -rf build-tools
+bzr get lp:linaro-android-build-tools build-tools
+sudo -H -E build-tools/node/build us-east-1.ec2-git-mirror.linaro.org "$CONFIG"
+'''
+
+def mangle(tree):
+    tags = tree.xpath('/project/builders/hudson.plugins.shell.ShellWithStatus/command')
+    tags[0].text = new_cmd

@@ -1,0 +1,9 @@
+# Removes all triggers of a job.
+# This is useful for sandboxes to avoid unexpected cron jobs runs
+# See also cron-disable.mangle
+
+def mangle(tree):
+    tag = tree.xpath('//triggers')[0]
+    for t in tag:
+        tag.remove(t)
+    tag.text = None

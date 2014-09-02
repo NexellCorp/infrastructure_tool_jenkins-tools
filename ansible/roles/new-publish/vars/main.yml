@@ -1,0 +1,5 @@
+publish_root: ''
+publish_home: "{{publish_root}}/mnt/publish"
+
+# not ideal
+publish_keys_dir: "{{publish_home}}"

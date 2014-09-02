@@ -1,0 +1,10 @@
+- name: Copy production SSL key
+  copy: src={{secrets_dir}}/ssl/{{inventory_hostname}}.key dest={{ssl_key}} mode=600 backup=yes
+  sudo: yes
+  notify:
+      - Restart Apache
+- name: Copy production SSL cert
+  copy: src={{secrets_dir}}/ssl/{{inventory_hostname}}.crt dest={{ssl_cert}} mode=600 backup=yes
+  sudo: yes
+  notify:
+      - Restart Apache

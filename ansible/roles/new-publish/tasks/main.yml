@@ -1,0 +1,87 @@
+- name: Create top-level publishing dir
+  # Home dir must be owned by root for ssh ChrootDirectory to work
+  file: dest={{publish_home}} state=directory mode=0755 owner=root group=root
+  sudo: yes
+
+- name: Create publish group
+  group: name=publish state=present
+  sudo: yes
+
+- name: Create publish-copy user
+  user: name=publish-copy comment='Publishing - transfer user'
+        group=publish home={{publish_home}}
+#        generate_ssh_key=yes
+#        ssh_key_file={{publish_keys_dir}}/publish-copy
+  sudo: yes
+
+- name: Create publish-trigger user
+  user: name=publish-trigger comment='Publishing - trigger user'
+        group=publish home={{publish_home}}
+#        generate_ssh_key=yes
+#        ssh_key_file={{publish_keys_dir}}/publish-trigger
+  sudo: yes
+
+- name: Create upload dir
+  # Actual uploads will happen to this dir
+  # publish-copy should have write access there, publish-trigger
+  # generally only read (cleanup can be handled by cronjob)
+  file: dest={{publish_home}}/uploads state=directory mode=0755 owner=publish-copy group=publish
+  sudo: yes
+
+
+- name: Create /etc/ssh/user-authorized-keys/
+  file: dest={{publish_root}}/etc/ssh/user-authorized-keys/ state=directory mode=0755 owner=root group=root
+  sudo: yes
+
+- name: Setup publish-copy user SSH restrictions
+  template: src=publish-copy.j2
+            dest={{publish_root}}/etc/ssh/user-authorized-keys/publish-copy
+            owner=root group=root mode=0644
+  sudo: yes
+
+- name: Setup publish-trigger user SSH restrictions
+  template: src=publish-trigger.j2
+            dest={{publish_root}}/etc/ssh/user-authorized-keys/publish-trigger
+            owner=root group=root mode=0644
+  sudo: yes
+
+- name: Disable external sftp
+  lineinfile: state=absent regexp="Subsystem sftp /usr/lib/openssh/sftp-server"
+    dest=/etc/ssh/sshd_config
+  sudo: yes
+  notify:
+    - Restart SSHD
+
+- name: Check if sshd_config already contains needed config
+  command: grep "^AuthorizedKeysFile" /etc/ssh/sshd_config
+  register: result
+  ignore_errors: yes
+  changed_when: False
+
+#regexp="^AuthorizedKeysFile"
+- name: sshd_config - Update AuthorizedKeysFile location
+  lineinfile:
+    line="{{ lookup('file', 'ssh_config_1') }}"
+    dest=/etc/ssh/sshd_config
+    backup=yes
+  sudo: yes
+  when: result is defined and result.rc != 0
+
+- name: Create .ssh dir
+  file: dest={{publish_home}}/.ssh state=directory mode=0755
+  sudo: yes
+
+- name: Create known_hosts
+  shell: ssh-keyscan snapshots.linaro.org staging.snapshots.linaro.org >{{publish_home}}/.ssh/known_hosts
+  sudo: yes
+
+# New m3.medium instance has rather modest instance store which is used
+# as upload area, so clean it often
+- name: Set up upload area cleanup cronjob
+  cron: name="Clean up upload area"
+        job="/home/ubuntu/linaro-jenkins-tools/new-publish/clean-uploads"
+        minute="*/15"
+        cron_file=new-publish user=publish-copy
+  sudo: yes
+  tags:
+    - cronjob

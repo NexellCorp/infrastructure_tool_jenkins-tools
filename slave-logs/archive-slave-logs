@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# This script moves EC2 build slave logs, which short-sightedly
+# put straight into JENKINS_HOME by EC2 plugin, into slave-logs/ subdir.
+# While moving, it also prefixes each log with a date, to facilitate
+# log analysis, querying and grepping.
+#
+# It is intended to be run as a cronjob.
+#
+
+JENKINS_HOME=/var/lib/jenkins
+
+cd $JENKINS_HOME
+mkdir -p slave-logs
+
+find . -maxdepth 1 -type f -name 'slave-i*.log*' -mmin +60 -print0 | \
+    xargs -0 --no-run-if-empty ls -l | \
+    awk ' {print $8 " " "slave-logs/" $6 "-" substr($8, 3)}' | \
+    xargs --no-run-if-empty -n2 mv -b

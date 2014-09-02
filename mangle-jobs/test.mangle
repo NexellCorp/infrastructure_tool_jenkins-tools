@@ -1,0 +1,7 @@
+# Sample test mangle script
+
+def mangle(tree):
+    tags = tree.xpath('/project/description')
+    if not tags: return
+    tag = tags[0]
+    tag.text = 'Excitingly created.'

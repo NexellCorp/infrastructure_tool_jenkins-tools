@@ -1,0 +1,51 @@
+- debug: var=jenkins_config_from_backup
+  tags:
+    - git
+
+- name: Ensure Jenkins config dir exists
+  file: path=/var/lib/jenkins owner=jenkins state=directory
+  sudo: yes
+  tags:
+    - git
+
+- name: Check if Jenkins config already checked out
+  stat: path=/var/lib/jenkins/.git
+  register: checkout_exists
+  tags:
+    - git
+
+- name: Checkout production Jenkins config backup (if not yet)
+  # dest must end with "jenkins"
+  git: name=ssh://paul.sokolovsky@linaro-private.git.linaro.org/srv/linaro-private.git.linaro.org/linaro-infrastructure/jenkins-config-{{site_name}}.git
+       dest=/home/ubuntu/jenkins
+       accept_hostkey=true
+  when: checkout_exists.stat.exists == False
+  tags:
+    - git
+
+- name: Copy config checkout to final destination (if not yet)
+  shell: cp -a /home/ubuntu/jenkins /var/lib/
+  sudo: true
+  when: checkout_exists.stat.exists == False
+  tags:
+    - git
+
+- name: Ensure userContent redirect dir exists
+  file: dest=/var/lib/jenkins/jobs/_extra/userContent state=directory mode=0775
+  sudo: true
+  tags:
+    - git
+
+- name: Set correct permissions on config checkout
+  file: path=/var/lib/jenkins owner=jenkins group=ubuntu state=directory recurse=yes
+  sudo: true
+  tags:
+    - git
+  #mode=0775
+
+- name: Set correct permissions for keys
+  shell: chown .publish /var/lib/jenkins/.ssh/linaro-android-build-publish*; chmod 440 /var/lib/jenkins/.ssh/linaro-android-build-publish*
+  sudo: true
+  when: hosttype == "android-build"
+  tags:
+    - git

@@ -1,0 +1,17 @@
+# Add default project-based security setting for project (anon read access)
+
+from lxml.etree import fromstring
+from mangle_helper import *
+
+new_node = """\
+    <hudson.security.AuthorizationMatrixProperty>
+      <permission>hudson.model.Item.Read:anonymous</permission>
+    </hudson.security.AuthorizationMatrixProperty>
+"""
+
+def mangle(tree):
+    if tree.xpath("//properties/hudson.security.AuthorizationMatrixProperty"):
+        # Needed config already there - don't change
+        return False
+
+    add_child(tree, "/project/properties", new_node)

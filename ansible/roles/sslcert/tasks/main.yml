@@ -1,0 +1,8 @@
+- include: self-signed.yml
+  when: ssl_cert_self_signed
+- include: production.yml
+  when: not ssl_cert_self_signed
+
+- name: Copy Go Daddy certificate bundle
+  copy: src=files/gd_bundle.crt dest=/etc/ssl/certs/gd_bundle.crt mode=0644
+  sudo: yes

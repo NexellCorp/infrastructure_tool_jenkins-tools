@@ -1,0 +1,7 @@
+- name: Restart Apache
+  service: name=apache2 state=restarted
+  sudo: yes
+
+- name: Restart SSHD
+  service: name=ssh state=restarted
+  sudo: yes

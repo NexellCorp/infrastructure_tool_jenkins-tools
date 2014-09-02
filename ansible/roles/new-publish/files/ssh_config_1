@@ -1,0 +1,10 @@
+
+# Added by Ansible
+AuthorizedKeysFile /etc/ssh/user-authorized-keys/%u %h/.ssh/authorized_keys
+Subsystem sftp internal-sftp
+
+Match User publish-copy
+       ChrootDirectory /mnt/publish
+       ForceCommand    internal-sftp
+       AllowTcpForwarding    no
+       X11Forwarding         no

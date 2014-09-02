@@ -1,0 +1,12 @@
+# Set cron weekend spec to skip Sat
+
+
+def mangle(tree):
+    nodes = tree.xpath("//hudson.triggers.TimerTrigger/spec")
+    if not nodes:
+        return False
+    spec = nodes[0].text.split()
+    if spec[-1] != "*":
+        return False
+    spec[-1] = "0-5"
+    nodes[0].text = " ".join(spec)

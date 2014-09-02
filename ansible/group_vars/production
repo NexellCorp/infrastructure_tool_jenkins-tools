@@ -1,0 +1,5 @@
+production: yes
+jenkins_managed_config: no
+jenkins_auth: crowd
+jenkins_setup_ssh_publish: yes
+ssl_cert_self_signed: no

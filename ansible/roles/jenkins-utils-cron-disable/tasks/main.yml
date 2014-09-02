@@ -1,0 +1,6 @@
+- name: Disable any jobs triggered based on time schedule ("cron jobs")
+  command: ./mangle-jobs cron-disable.mangle --dir=/var/lib/jenkins --backup --really
+           chdir=linaro-jenkins-tools/mangle-jobs/
+  when: "not production and jenkins_config_from_backup"
+  tags:
+    - mangle-jobs

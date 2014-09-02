@@ -1,0 +1,13 @@
+- name: Install dependent packages
+  apt: pkg={{item}}
+  sudo: yes
+  with_items:
+      - python-lxml
+
+- name: Checkout linaro-jenkins-tools
+  git: name=http://git.linaro.org/git/infrastructure/linaro-jenkins-tools.git
+       dest=~/linaro-jenkins-tools
+  tags:
+    - git
+    # Up to date checkout required for mangle-jobs
+    - mangle-jobs

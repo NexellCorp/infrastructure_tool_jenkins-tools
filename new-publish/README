@@ -1,0 +1,111 @@
+Prototype of new Publishing API for Linaro CI
+=============================================
+
+Background
+---------------------
+Builds of various products and components must finish with publishing
+their artifacts to a central server, hereafter called "snapshots".
+Builds also must be queued for testing in LAVA. All publishing
+should happen in secure manner, prohibiting direct system break-ins
+and minimizing types of other attacks, like denial of service.
+
+This prototype tries to establish consistent external interface reusable
+for wild variety of Linaro builds, and initial implementation which
+works with existing infrastructure and setup in place.
+
+Generalize publishing process:
+
+Builder -> Snapshots
+
+
+External Interface
+------------------
+Build jobs use publishing API using the shell command calls. To
+perform publishing build calls following script:
+
+publish --token=<token> --type=<build_type> --strip=<strip> <build_id> <glob_pattern>...
+
+<token>
+    Token to authenticate publishing request. It is expected that security
+    token is injected into build process by top-level scheduler. [Not
+    implemented in prototype.]
+<build_type>
+    Type of the build from a predefined set, like "android", "kernel",
+    "openembedded", etc. Generally, this selects target area for publishing,
+    but may influence other build parameters, like directory structure,
+    metadata, etc.
+<strip>
+    String number of components from paths produced by <glob_pattern>.
+<build_id>
+    Build ID of the form <job_name>/<build_no>. This allows identification
+    of particular build job and its specific build case. build_id is usually
+    used directly as path (URL) component to access build artifacts.
+<glob_pattern>
+    Shell glob patterns to capture artifact files. There may be more than one,
+    separate by spaces, or (for compatibility with Jenkins), by commas (in this
+    case no spaces allowed). Patterns must follow shell syntax, i.e.
+    multi-level match (**) is not supported.
+
+Example:
+
+$ publish --token=SECRET --type=android --strip=2 panda/10 out/target/*.tar.bz2
+
+With this command, artifacts can be expected to be found on URL like
+
+http://snapshosts/android/panda/10/*.tar.bz2
+
+Internal Implementation
+-----------------------
+There's currently no token-based authentication for publishing services,
+and instead SSH auth used. Consequenetly, for security reasons, the accounts
+used for publishing should be as restricted as possible, in practice we
+use few accounts for each step of the process, each fortified to disallow
+opportunity of direct shell access. SFTP is used as a transport (due to
+historical reasons).
+
+Current publisher process goes as:
+
+Builder -> Master -> Snapshots
+
+Publishing starts on build slave with SFTPing artifact files to master
+(using one account with chrooted SFTP access), then triggering further
+processing by calling out (by SSH) sshd-config fixed script on master.
+This script recursively applies same processing (chroot SFTP, fixed script)
+to publish files to snapshots.
+
+Conclusions and Future Work
+---------------------------
+The biggest management and security issue with the implementation described
+above is authentication of publishing clients to publishing service.
+Implementation described above is cumbersome to setup and maintain and
+doesn't adhere to strictest security practices.
+
+To adress this problem, implementation of publishing as a web service may be
+suggested - this way, authentication handling on server side is confined to
+a single custom component, web application. It thus can be very flexible
+and featureful, for example, we can implement "publishing tockens", each
+associated with set of constraints, like "active not before 30min from
+time of issuance", "active not after 2hr from time of issuance", "can
+be used for publishing type 'android'", "publisher IP should be X.X.X.X",
+etc., etc. However, there still remains problems of issuing tockens for
+build hosts. Essentially, tockens should be "injected" into builds by
+a trusted party (a kind of build scheduling frontend). We already have
+frontend on android-build, but ci.linaro.org presents "raw" Jenkins. It
+might be possible to integrate needed functionality into Jenkins via plugin.
+
+But publishing few moderately-sized files is not the only usecase for
+Publishing Service. For OpenEmbedded builds, we need to publish used sources/
+cache files, which may be thousands of files totalling gigabytes. Except
+that any particular build would like likely change only reasonably small
+subset of these files, and only those need to bt actually published.
+This is clearly a usecase for rsync, but with rsync, we would need to deal
+with PAM for any custom authentication, and it's still unclear if it will
+possible to achieve flexibility simalar to tokens described.
+
+That's the dichotomy we have - we need efficient transfer protocol, as
+we potentially deal with many files and large amounts of data, and yet
+we need flexible token/ticket style authentication. It may be possible
+to choose a compromise between the two - implement a webservice with
+rudimentary "file freshness" protocol (which would work on the level of
+entire file, not sub-blocks). Existing system-level ticketing systems
+like Kerberos can be also considered.

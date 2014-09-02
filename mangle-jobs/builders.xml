@@ -1,0 +1,19 @@
+  <builders>
+    <hudson.plugins.shell.ShellWithStatus>
+      <command># Runs as ubuntu
+rm -rf build-tools jenkins-tools
+git clone https://git.linaro.org/infrastructure/linaro-android-build-tools.git build-tools
+git clone https://git.linaro.org/infrastructure/linaro-jenkins-tools.git jenkins-tools
+
+sudo -H -E build-tools/node/build us-east-1.ec2-git-mirror.linaro.org &quot;$CONFIG&quot;
+
+time jenkins-tools/new-publish/publish -i $JENKINS_URL -p2 $JOB_NAME/$BUILD_NUMBER &quot;build/out/target/*/*/*.img*,build/out/target/*/*/*.tar.bz2,build/out/MD5SUMS,build/out/*.tar.bz2,build/out/*.img*,build/out/*.xml,build/out/*_config,build/out/lava-job-info,build/out/linaro_kernel_build_cmds.sh,build/out/linaro_android_build_cmds.sh,build/out/BUILD-INFO.txt,build/out/*/BUILD-INFO.txt,build/out/*/*/BUILD-INFO.txt,build/out/*/*/*/BUILD-INFO.txt,build/out/HOWTO_*.txt&quot;
+
+build-tools/node/lava-submit &quot;$CONFIG&quot;
+
+time jenkins-tools/new-publish/publish -i $JENKINS_URL -p2 $JOB_NAME/$BUILD_NUMBER build/out/lava-job-info
+
+echo &quot;Build finished&quot;
+</command>
+    </hudson.plugins.shell.ShellWithStatus>
+  </builders>

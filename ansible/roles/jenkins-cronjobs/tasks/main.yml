@@ -1,0 +1,28 @@
+# Make sure Jenkins is (re)started
+- meta: flush_handlers
+
+- wait_for: port={{jenkins_port}} timeout=60
+
+# Container port may be opened, but app running there may not yet be ready
+- wait_for: port={{jenkins_port}} delay=10 timeout=60
+
+- name: Download jenkins-cli, required by some cronjobs
+  get_url: url=http://localhost:{{jenkins_port}}{{jenkins_prefix}}/jnlpJars/jenkins-cli.jar
+           dest=/var/lib/jenkins
+  register: result
+  ignore_errors: yes
+  until: result | success
+  retries: 10
+  delay: 7
+  sudo: yes
+  tags:
+    - cronjob
+
+- name: Set up cronjob to expire old builds of inactive jobs
+  cron: name="Expire old builds"
+        job="java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:{{jenkins_port}}{{jenkins_prefix}}/ -i /var/lib/jenkins/.ssh/jenkinscli groovy linaro-jenkins-tools/diskspace/expire-builds.groovy"
+        minute=0 hour=19
+        cron_file=linaro-jenkins user=jenkins
+  sudo: yes
+  tags:
+    - cronjob

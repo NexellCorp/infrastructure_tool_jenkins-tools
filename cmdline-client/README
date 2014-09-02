@@ -1,0 +1,62 @@
+Basic android-build.linaro.org command-line client
+==================================================
+
+This tool provides proof-of-concept command-line client for Linaro Android
+Build Jenkins master (android-build.linaro.org), as an alternative for
+existing Web UI interface. One particular feature the command-line client
+has and Web UI lacks is support for creating completely private builds (such
+builds are not availabel via Web UI at all). At the same time, this tool is
+so far in the proof of concept stage and provides only basic job management
+actions (namely, create a job and schedule its build). If you find this tool
+useful, please share your comments and suggestion using this bugtracker:
+
+https://bugs.launchpad.net/linaro-android-infrastructure
+
+to help its improvement and evolution.
+
+
+Quick start
+-----------
+
+1. You should have access to Jenkins at:
+
+http://android-build.linaro.org/jenkins/
+
+(Generally available for Linaro Android team members).
+
+2. Download android-build-client tool. As it is written to depend only
+on Python standard library, an easy way to get it is to download seperate
+file via Launchpad BZR viewer:
+
+wget "http://bazaar.launchpad.net/~linaro-automation/linaro-android-build-tools/trunk/download/head:/androidbuildclient-20130724114943-yefh8succov70g5i-2/android-build-client"
+chmod +x android-build-client
+
+3. Look up your Jenkins API token by visiting
+https://android-build.linaro.org/jenkins/me/configure and clicking
+"Show API Token..." button.
+
+4. Run:
+
+./android-build-client authorize
+
+Enter yous Jenkins username and API token. Note that this will cache these
+credentials in your home dir, so use this only on your personal well-protected
+workstation. The alternative is to use --user switch and input API key
+interactively.
+
+5. To create a new job, prepare an Android job config (see
+https://wiki.linaro.org/Platform/Android/LinaroAndroidBuildService for more
+info) in a file. Run:
+
+./android-build-client create <job_name> <job_config_file>
+
+Note that job name should conform to Android Build Service naming
+converntions, see documentation link above for more info. To create a job
+private for a particular group, pass --private=<group> switch to create command.
+
+6. To schedule a build, run:
+
+./android-build-client build <job_name>
+
+
+Run ./android-build-client --help to see all options.

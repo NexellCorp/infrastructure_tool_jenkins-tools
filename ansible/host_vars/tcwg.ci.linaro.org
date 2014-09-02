@@ -1,0 +1,5 @@
+# Until DNS set up
+#ansible_ssh_host: 50.19.223.142
+
+# Block device to use for Jenkins jobs storage
+job_store_dev: /dev/xvdc
