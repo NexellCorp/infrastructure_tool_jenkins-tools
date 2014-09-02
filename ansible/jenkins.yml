@@ -28,11 +28,11 @@
     - {role: apache-site, config: "android-build.linaro.org", when: hosttype == "android-build", tags: ["apache"]}
     - {role: linaro-jenkins-tools, tags: ['linaro-jenkins-tools']}
     - {role: jenkins-utils-cron-disable}
-    - {role: jenkins-utils-publish-staging}
-    - {role: jenkins-utils-set-jenkins-url}
+    - {role: jenkins-utils-publish-staging, when: jenkins_setup_ssh_publish}
+    - {role: jenkins-utils-set-jenkins-url, when: jenkins_setup_ssh_publish}
     - {role: new-publish, when: hosttype == "android-build", tags: ["new-publish"]}
     - {role: squid, tags: ["squid"]}
-    - {role: jenkins-cronjobs, tags: ["cronjob"]}
+    #- {role: jenkins-cronjobs, tags: ["cronjob"]}
   tasks:
   - name: Check out linaro-android-build-tools
     git: name={{linaro_android_build_tools_repo}} version={{linaro_android_build_tools_rev}}
